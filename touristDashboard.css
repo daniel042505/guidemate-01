@@ -1,0 +1,132 @@
+:root {
+            --cebu-blue: #0984e3;
+            --cebu-gold: #fdcb6e;
+            --glass: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background: #f8f9fa;
+            color: #2d3436;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            background: white;
+            padding: 15px 5% ;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { font-weight: 800; font-size: 1.4rem; color: var(--cebu-blue); }
+
+        /* --- Hero Search --- */
+        .hero-search {
+            height: 60vh;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                        url('https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .search-bar {
+            background: white;
+            padding: 10px;
+            border-radius: 50px;
+            display: flex;
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .search-bar input {
+            border: none;
+            padding: 10px 20px;
+            flex: 1;
+            border-radius: 50px;
+            outline: none;
+        }
+
+        .search-btn {
+            background: var(--cebu-blue);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* --- Destination Grid --- */
+        .section-container { padding: 50px 10%; }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .dest-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .dest-card:hover { transform: translateY(-10px); }
+
+        .dest-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .dest-info { padding: 20px; }
+        .dest-info h3 { margin: 0; font-size: 1.2rem; }
+        .dest-info p { font-size: 0.85rem; color: #636e72; }
+
+        .price-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--cebu-gold);
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+
+        .logout-link {
+            background: #00aa6c;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 20px;
+        }
+
+        .logout-link:hover {
+            background: #008855;
+        }

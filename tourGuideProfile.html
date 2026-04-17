@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Guide Profile - GuideMate</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tourGuideProfile.css">
+</head>
+<body class="profile-page guide-profile-page">
+
+<header class="navbar">
+    <div class="logo">
+        <a href="tourGuideDashboardNew.html">GuideMate 🌴</a>
+    </div>
+    <div class="nav-right">
+        <div class="profile-container">
+            <img src="photos/default.jpg" alt="Profile" class="profile-pic" id="guideNavProfilePic">
+            <div class="dropdown-menu" id="guideNavDropdown">
+                <a href="tourGuideProfile.html">Profile</a>
+                <a href="tourGuideDashboardNew.html">Dashboard</a>
+                <hr>
+                <button type="button" class="sign-out-link" onclick="handleLogout()">Sign out</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="profile-main">
+    <div class="cover-section">
+        <button class="add-cover-btn" type="button">📷 Add cover photo</button>
+    </div>
+
+    <div class="user-header-card">
+        <div class="user-info-flex">
+            <img id="guideProfilePic" src="photos/default.jpg" alt="Profile" class="large-avatar">
+            <div class="user-details">
+                <h1 id="profileName">Tour Guide</h1>
+                <p class="handle" id="profileHandle">@guide</p>
+            </div>
+            <div class="header-actions">
+                <a href="select_profile_pic.php?change=1" class="edit-btn">Change profile picture</a>
+                <small id="profilePicCooldownNote" class="guide-change-note-inline" style="display:none"></small>
+            </div>
+        </div>
+        <nav class="profile-tabs">
+            <a href="#" class="active">Profile</a>
+            <a href="#reviews">Reviews</a>
+        </nav>
+    </div>
+
+    <div class="profile-content-grid">
+        <aside class="sidebar-achievements">
+            <h3>Profile rating</h3>
+            <p>From tourist reviews</p>
+            <div class="guide-rating-display sidebar-rating">
+                <span class="guide-rating-stars" id="guideRatingStars">—</span>
+                <span class="guide-rating-value" id="guideRatingValue">—</span>
+                <span class="guide-rating-count" id="guideRatingCount">(0 reviews)</span>
+            </div>
+        </aside>
+
+        <section class="main-feed">
+            <!-- Inside of profile: Services offered, Experience & specialization, Service areas, Rating, Respond to reviews -->
+            <div class="guide-profile-feed">
+                <div class="guide-profile-card guide-profile-details-card">
+                    <div class="guide-card-header">
+                        <div>
+                            <h2>Profile details</h2>
+                            <p class="guide-profile-desc">Update your services, experience, and service area.</p>
+                        </div>
+                    </div>
+
+                    <div class="guide-form-grid">
+                        <div class="guide-field guide-field-full">
+                            <label for="specialization">Services offered / Specialization</label>
+                            <input type="text" id="specialization" placeholder="e.g. Adventure tours, Cultural walks, Island hopping">
+                        </div>
+
+                        <div class="guide-field">
+                            <label for="experienceYears">Years of experience</label>
+                            <input type="number" id="experienceYears" min="0" max="70" value="0">
+                        </div>
+
+                        <div class="guide-field">
+                            <label for="serviceAreas">Service areas (location)</label>
+                            <input type="text" id="serviceAreas" placeholder="e.g. Cebu City, Badian, Moalboal">
+                        </div>
+                    </div>
+
+                    <div class="guide-save-row">
+                        <button type="button" id="saveProfileBtn" class="profile-submit-btn">Save profile</button>
+                        <p id="profileSaveMessage" class="guide-save-msg"></p>
+                    </div>
+                </div>
+
+                <div class="guide-profile-card" id="reviews">
+                    <h2>Tourist reviews</h2>
+                    <p class="guide-profile-desc">Respond to reviews from tourists.</p>
+                    <div id="guideReviewsList" class="guide-reviews-list">
+                        <p class="guide-reviews-empty">Loading…</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script src="logout_modal.js"></script>
+<script>
+(function() {
+    var role = localStorage.getItem('role') || 'guide';
+    var userId = localStorage.getItem('userId') || '';
+    var roleKey = (role && userId) ? ('profileImage:' + role + ':' + userId) : '';
+    var src = (roleKey ? localStorage.getItem(roleKey) : null) || localStorage.getItem('profileImage');
+    if (src) {
+        var img = document.getElementById('guideProfilePic');
+        if (img) img.src = src;
+        var navPic = document.getElementById('guideNavProfilePic');
+        if (navPic) navPic.src = src;
+    }
+})();
+function handleLogout() {
+    function clearStoredSessionState() {
+        var activeRole = localStorage.getItem('role') || '';
+        var activeUserId = localStorage.getItem('userId') || '';
+
+        localStorage.removeItem('userLoggedIn');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('role');
+        localStorage.removeItem('touristId');
+        localStorage.removeItem('guideId');
+        localStorage.removeItem('firstName');
+        localStorage.removeItem('lastName');
+        localStorage.removeItem('fullName');
+        localStorage.removeItem('profileImage');
+        localStorage.removeItem('userReviews');
+
+        if (activeRole && activeUserId) {
+            localStorage.removeItem('firstName:' + activeRole + ':' + activeUserId);
+            localStorage.removeItem('lastName:' + activeRole + ':' + activeUserId);
+            localStorage.removeItem('profileName:' + activeRole + ':' + activeUserId);
+            localStorage.removeItem('profileImage:' + activeRole + ':' + activeUserId);
+        }
+    }
+
+    if (typeof showLogoutConfirm === 'function') {
+        showLogoutConfirm(function() {
+            clearStoredSessionState();
+            window.location.href = 'logout.php';
+        });
+    } else {
+        clearStoredSessionState();
+        window.location.href = 'logout.php';
+    }
+}
+(function() {
+    var btn = document.getElementById('guideNavProfilePic');
+    var menu = document.getElementById('guideNavDropdown');
+    if (btn && menu) {
+        btn.addEventListener('click', function(e) { e.stopPropagation(); menu.classList.toggle('show'); });
+        window.addEventListener('click', function() { menu.classList.remove('show'); });
+    }
+})();
+document.querySelectorAll('.profile-tabs a').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.profile-tabs a').forEach(function(x) { x.classList.remove('active'); });
+        this.classList.add('active');
+        if (this.getAttribute('href') === '#reviews') {
+            document.getElementById('reviews').scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+});
+
+function loadGuideProfile() {
+    var guideId = localStorage.getItem('guideId');
+    var url = 'get_guide_profile.php';
+    if (guideId) url += '?guide_id=' + encodeURIComponent(guideId);
+    fetch(url, { credentials: 'same-origin' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.error) return;
+            var yearsEl = document.getElementById('experienceYears');
+            var areasEl = document.getElementById('serviceAreas');
+            var specEl = document.getElementById('specialization');
+            if (yearsEl && data.experience_years !== undefined) yearsEl.value = data.experience_years;
+            if (areasEl && data.service_areas !== undefined) areasEl.value = data.service_areas || '';
+            if (specEl && data.specialization !== undefined) specEl.value = data.specialization || '';
+            var nameEl = document.getElementById('profileName');
+            var handleEl = document.getElementById('profileHandle');
+            if (nameEl) nameEl.textContent = [data.first_name, data.last_name].filter(Boolean).join(' ') || 'Tour Guide';
+            if (handleEl) handleEl.textContent = '@' + (data.first_name || 'guide').toLowerCase().replace(/\s+/g, '');
+            var avg = data.avg_rating != null ? data.avg_rating : 0;
+            var count = data.review_count != null ? data.review_count : 0;
+            var starsEl = document.getElementById('guideRatingStars');
+            var valueEl = document.getElementById('guideRatingValue');
+            var countEl = document.getElementById('guideRatingCount');
+            if (starsEl) starsEl.textContent = avg > 0 ? '★'.repeat(Math.round(avg)) : '—';
+            if (valueEl) valueEl.textContent = avg > 0 ? avg.toFixed(1) : '—';
+            if (countEl) countEl.textContent = count === 1 ? '(1 review)' : '(' + count + ' reviews)';
+
+            var noteEl = document.getElementById('profilePicCooldownNote');
+            if (noteEl) {
+                var shouldShowCooldown = localStorage.getItem('showProfilePicCooldownNote') === '1';
+                var lastDate = data.profile_image_updated_at;
+                if (shouldShowCooldown && lastDate) {
+                    var last = new Date(String(lastDate) + 'T00:00:00');
+                    var next = new Date(last.getTime() + (30 * 24 * 60 * 60 * 1000));
+                    var now = new Date();
+                    var diffMs = next.getTime() - now.getTime();
+                    var msg = '1 change per 30 days';
+                    if (diffMs > 0) {
+                        var daysLeft = Math.ceil(diffMs / (24 * 60 * 60 * 1000));
+                        msg += ' · next change in ' + (daysLeft === 1 ? '1 day' : (daysLeft + ' days'));
+                    } else {
+                        msg += ' · you can change again now';
+                    }
+                    noteEl.textContent = msg;
+                    noteEl.style.display = 'block';
+                    localStorage.removeItem('showProfilePicCooldownNote');
+                } else {
+                    noteEl.textContent = '';
+                    noteEl.style.display = 'none';
+                }
+            }
+        })
+        .catch(function() {});
+}
+function saveGuideProfile() {
+    var yearsEl = document.getElementById('experienceYears');
+    var areasEl = document.getElementById('serviceAreas');
+    var specEl = document.getElementById('specialization');
+    var btn = document.getElementById('saveProfileBtn');
+    var msgEl = document.getElementById('profileSaveMessage');
+    if (!yearsEl || !areasEl) return;
+    var years = parseInt(yearsEl.value, 10) || 0;
+    var areas = (areasEl.value || '').trim();
+    var spec = (specEl && specEl.value) ? specEl.value.trim() : '';
+    if (years < 0) years = 0;
+    if (years > 70) years = 70;
+    if (btn) btn.disabled = true;
+    if (msgEl) { msgEl.style.display = 'none'; msgEl.textContent = ''; }
+    var form = new FormData();
+    form.append('experience_years', years);
+    form.append('service_areas', areas);
+    form.append('specialization', spec);
+    fetch('update_guide_profile.php', { method: 'POST', credentials: 'same-origin', body: form })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (msgEl) {
+                msgEl.style.display = 'block';
+                msgEl.style.color = data.ok ? '#40c057' : '#e03131';
+                msgEl.textContent = data.ok ? 'Saved.' : (data.error || 'Save failed.');
+            }
+            if (data.ok) {
+                yearsEl.value = years;
+                areasEl.value = areas;
+                if (specEl) specEl.value = spec;
+            }
+        })
+        .catch(function() {
+            if (msgEl) { msgEl.style.display = 'block'; msgEl.style.color = '#e03131'; msgEl.textContent = 'Save failed.'; }
+        })
+        .finally(function() { if (btn) btn.disabled = false; });
+}
+
+function loadGuideReviews() {
+    var list = document.getElementById('guideReviewsList');
+    if (!list) return;
+    fetch('get_guide_reviews.php', { credentials: 'same-origin' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var reviews = data.reviews || [];
+            if (reviews.length === 0) {
+                list.innerHTML = '<p class="guide-reviews-empty">No reviews yet.</p>';
+                return;
+            }
+            list.innerHTML = reviews.map(function(r) {
+                var name = r.tourist_name || 'Tourist';
+                var stars = '★'.repeat(r.rating || 0);
+                var replyHtml = '';
+                var reviewStatus = (r.status || 'visible').toLowerCase();
+                if (r.reply_text) {
+                    replyHtml = '<div class="guide-review-reply"><strong>Your reply:</strong> ' + escapeHtml(r.reply_text) + '</div>';
+                } else {
+                    replyHtml = '<div class="guide-review-respond" data-review-id="' + r.review_id + '">' +
+                        '<textarea class="guide-reply-input" placeholder="Write a reply…" rows="2"></textarea>' +
+                        '<button type="button" class="profile-submit-btn guide-reply-btn">Respond</button></div>';
+                }
+                var reportHtml = reviewStatus === 'reported'
+                    ? '<div class="guide-review-tools"><span class="guide-review-flag">Reported to admin</span></div>'
+                    : '<div class="guide-review-tools"><button type="button" class="guide-report-review-btn" data-review-id="' + r.review_id + '">Report review</button></div>';
+                return '<div class="guide-review-item" data-review-id="' + r.review_id + '">' +
+                    '<div class="guide-review-header">' + escapeHtml(name) + ' · ' + stars + ' ' + (r.rating || '') + '</div>' +
+                    '<p class="guide-review-comment">' + escapeHtml(r.comment || '') + '</p>' + replyHtml + reportHtml + '</div>';
+            }).join('');
+            list.querySelectorAll('.guide-reply-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var item = btn.closest('.guide-review-respond');
+                    var reviewId = item.getAttribute('data-review-id');
+                    var textarea = item.querySelector('.guide-reply-input');
+                    var text = textarea && textarea.value ? textarea.value.trim() : '';
+                    if (!text) return;
+                    fetch('submit_review_reply.php', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ review_id: parseInt(reviewId, 10), reply_text: text })
+                    })
+                        .then(function(res) { return res.json(); })
+                        .then(function(result) {
+                            if (result.ok) loadGuideReviews();
+                        });
+                });
+            });
+            list.querySelectorAll('.guide-report-review-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var reviewId = this.getAttribute('data-review-id');
+                    if (!reviewId) return;
+                    this.disabled = true;
+                    this.textContent = 'Reporting…';
+                    fetch('mark_review_reported.php', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ review_id: parseInt(reviewId, 10) })
+                    })
+                        .then(function(res) { return res.json(); })
+                        .then(function(result) {
+                            if (result.ok) {
+                                loadGuideReviews();
+                                return;
+                            }
+                            btn.disabled = false;
+                            btn.textContent = 'Report review';
+                        })
+                        .catch(function() {
+                            btn.disabled = false;
+                            btn.textContent = 'Report review';
+                        });
+                });
+            });
+        })
+        .catch(function() {
+            list.innerHTML = '<p class="guide-reviews-empty">Could not load reviews.</p>';
+        });
+}
+function escapeHtml(s) {
+    var div = document.createElement('div');
+    div.textContent = s;
+    return div.innerHTML;
+}
+
+window.addEventListener('load', function() {
+    loadGuideProfile();
+    loadGuideReviews();
+    var saveBtn = document.getElementById('saveProfileBtn');
+    if (saveBtn) saveBtn.addEventListener('click', saveGuideProfile);
+});
+</script>
+</body>
+</html>

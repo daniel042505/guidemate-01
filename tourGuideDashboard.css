@@ -1,0 +1,174 @@
+ :root {
+            --accent: #0d9488; /* Teal accent like landing page */
+            --glass: rgba(255, 255, 255, 0.9);
+            --dark-glass: rgba(255, 255, 255, 0.9);
+            --danger: #e74c3c;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9; /* Light background like landing page */
+            color: #333; /* Dark text */
+        }
+
+        /* --- Navigation --- */
+        nav {
+            background: white;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links span {
+            margin: 0 15px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links span:hover {
+            color: var(--accent);
+        }
+
+        /* --- Logout Button Style --- */
+        .logout-btn {
+            background: #00aa6c !important;
+            color: white !important;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s !important;
+        }
+
+        .logout-btn:hover {
+            background: #008855 !important;
+            color: white !important;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 100px 10%;
+            min-height: 35vh;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin: 10px 0;
+            font-weight: 800;
+            text-shadow: 3px 3px 15px rgba(0,0,0,0.6);
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            max-width: 650px;
+            font-size: 1.2rem;
+            line-height: 1.7;
+            margin-bottom: 35px;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+        }
+
+        /* --- Grid Layout --- */
+        .container {
+            padding: 0 5% 80px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        /* --- Glassmorphism Card Design --- */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 35px;
+            color: #1a2a3a;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.4);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-12px);
+        }
+
+        .icon-box {
+            background: #e8f5ed;
+            width: 65px;
+            height: 65px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--accent);
+        }
+
+        /* --- Task Specific Card --- */
+        .task-card {
+            text-align: left;
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .task-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 18px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary { background: var(--accent); color: white; margin-right: 12px; }
+        .btn-outline { background: transparent; border: 2px solid #1a2a3a; color: #1a2a3a; }
+        .btn-danger { background: var(--danger); color: white; width: 100%; margin-top: 20px; }
+
+        .btn:hover { 
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+
+        h2.section-title {
+            grid-column: 1 / -1;
+            font-size: 2.2rem;
+            margin: 20px 0 10px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.4);
+            font-weight: 800;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.8rem; }
+            nav { padding: 15px 25px; }
+            .nav-links { display: none; }
+        }

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Locations & Tour Guides - GuideMate</title>
+    <link rel="stylesheet" href="browse.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="logo">GuideMate</h1>
+            <ul class="nav-links">
+                <li><a href="landingpage.html">Home</a></li>
+                <li><a href="browse.html" class="active">Browse</a></li>
+                <li><a href="mytrips.html">My Trips</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="browse-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <h2>Explore Cebu</h2>
+            <p>Discover amazing locations and professional tour guides</p>
+        </div>
+
+        <!-- Locations Section -->
+        <section class="section">
+            <div class="section-header">
+                <h3>Popular Locations</h3>
+                <p class="section-subtitle">Explore the best destinations in Cebu</p>
+            </div>
+            <div class="scroll-container">
+                <div id="locationsContainer" class="items-grid">
+                    <!-- Locations will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Tour Guides Section -->
+        <section class="section" id="guidesSection">
+            <div class="section-header">
+                <h3 id="guidesSectionTitle">Top Tour Guides</h3>
+                <p class="section-subtitle" id="guidesSectionSubtitle">Meet our experienced and professional tour guides</p>
+                <button type="button" id="clearGuideFilterBtn" class="clear-filter-btn" hidden>Show all guides</button>
+            </div>
+            <div class="scroll-container">
+                <div id="guidesContainer" class="items-grid">
+                    <!-- Tour guides will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 GuideMate. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="browse.js"></script>
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Spotlight | Cebu AdventureSync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tourGuideDashboard.css">
+    <link rel="stylesheet" href="tourGuideDashboardNew.css">
+    <style>
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .review-item {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 18px 20px;
+            border-left: 4px solid #10b981;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.92);
+        }
+        .review-item:last-child { border-bottom: none; }
+        .review-panel-box {
+            margin-top: 12px;
+            border: 2px solid rgba(20, 39, 61, 0.14);
+            border-radius: 20px;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.7);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-sizing: border-box;
+        }
+        #recentFeedbackList {
+            width: 100%;
+        }
+        .review-quote {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #24364b;
+        }
+        .review-meta {
+            display: block;
+            margin-top: 8px;
+            color: #7a7f87;
+            font-size: 0.8rem;
+        }
+        .review-reply-link {
+            display: block;
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid #24364b;
+            border-radius: 18px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #24364b;
+            background: #fff;
+            box-sizing: border-box;
+        }
+        .review-reply-link:hover {
+            background: #f7f9fc;
+        }
+        
+        /* Ensure consistent card heights */
+        .glass-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .overview-grid .glass-card,
+        .overview-grid .glass-card:hover {
+            box-shadow: none !important;
+            transform: none !important;
+        }
+        .explore > .glass-card,
+        .explore > .glass-card:hover,
+        .reviews .review-grid .glass-card,
+        .reviews .review-grid .glass-card:hover {
+            box-shadow: none !important;
+            transform: none !important;
+        }
+        .message-modal[hidden] {
+            display: none;
+        }
+        .message-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(9, 21, 38, 0.62);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+        .message-modal-card {
+            width: min(680px, 100%);
+            max-height: 88vh;
+            background: #fff;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .message-modal-header {
+            padding: 22px 24px 16px;
+            border-bottom: 1px solid rgba(20, 39, 61, 0.08);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .message-modal-header h3 {
+            margin: 0;
+            color: #13263a;
+        }
+        .message-modal-header p {
+            margin: 6px 0 0;
+            color: #6b7280;
+            font-size: 0.92rem;
+        }
+        .message-close-btn {
+            border: none;
+            background: #eef2f7;
+            color: #24364b;
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .message-thread {
+            padding: 20px 24px;
+            background: #f7fafc;
+            overflow-y: auto;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .message-bubble {
+            max-width: 82%;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: #fff;
+            color: #213547;
+        }
+        .message-bubble.guide {
+            align-self: flex-end;
+            background: #dff7ea;
+        }
+        .message-bubble.tourist {
+            align-self: flex-start;
+            background: #fff;
+        }
+        .message-bubble strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #667085;
+        }
+        .message-bubble p {
+            margin: 0;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        .message-bubble small {
+            display: block;
+            margin-top: 8px;
+            color: #7a7f87;
+            font-size: 0.78rem;
+        }
+        .message-empty {
+            text-align: center;
+            color: #7a7f87;
+            padding: 34px 12px;
+        }
+        .message-composer {
+            padding: 18px 24px 24px;
+            border-top: 1px solid rgba(20, 39, 61, 0.08);
+            background: #fff;
+        }
+        .message-status {
+            min-height: 20px;
+            margin-top: 10px;
+            color: #6b7280;
+            font-size: 0.88rem;
+        }
+        .message-status.error {
+            color: #b42318;
+        }
+        .message-status.success {
+            color: #027a48;
+        }
+        #bookingMessageInput {
+            width: 100%;
+            min-height: 110px;
+            padding: 14px 16px;
+            border: 1px solid rgba(20, 39, 61, 0.12);
+            border-radius: 16px;
+            resize: vertical;
+            font: inherit;
+            color: #213547;
+            box-sizing: border-box;
+        }
+        .guide-nav-welcome {
+            margin-right: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #24364b;
+            white-space: nowrap;
+        }
+        .overview-card-plain {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+        .overview-card-plain:hover {
+            box-shadow: none !important;
+        }
+        .overview-card-plain.is-selected {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 1px solid rgba(20, 39, 61, 0.2) !important;
+            box-shadow: none !important;
+            border-radius: 24px;
+        }
+        .overview-card-boxed {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 1px solid rgba(20, 39, 61, 0.2) !important;
+            box-shadow: none !important;
+            border-radius: 24px;
+        }
+        .overview-card-plain:focus-visible {
+            outline: 2px solid rgba(16, 185, 129, 0.55);
+            outline-offset: 2px;
+        }
+        @media (max-width: 980px) {
+            .guide-nav-welcome {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo" style="font-weight: 800; font-size: 1.3rem; letter-spacing: 1px;"> GuideMate🌴</div>
+    <nav>
+        <a href="tourGuideDashboardNew.html" style="color: var(--accent);">DASHBOARD</a>
+        <a href="tourGuideProfile.html">PROFILE</a>
+        <a href="#">MY TOURS</a>
+        <a href="#">GUESTS</a>
+    </nav>
+    <div class="nav-right">
+        <div class="profile-container">
+            <span id="guideNavWelcome" class="guide-nav-welcome">Welcome back Guide, Guide</span>
+            <img src="photos/default.jpg" alt="Profile" class="profile-pic" id="guideNavProfilePic" title="Profile">
+            <div class="dropdown-menu" id="guideNavDropdown">
+                <a href="tourGuideProfile.html">Profile</a>
+                <a href="tourGuideDashboardNew.html">Dashboard</a>
+                <hr>
+                <button type="button" class="sign-out-link" onclick="handleLogout()">Sign out</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        
+        <span id="bookingHeroLabel" style="font-weight: 600; letter-spacing: 3px; color: #51ff9a; text-transform: uppercase;">Current Assignment</span>
+        <h1 id="bookingHeroTitle">No approved booking yet</h1>
+        <p id="bookingHeroText">When you accept a tourist booking request, the tourist name will appear here.</p>
+        <p id="bookingHeroMeta" style="font-weight: 600; color: rgba(255,255,255,0.92); margin-top: 10px;"></p>
+        <div id="bookingHeroActions" style="display: none; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" style="background: white; color: var(--accent);">ACTIVATE GPS</button>
+            <button id="heroMessageTouristBtn" class="btn btn-primary" style="background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.5); backdrop-filter: blur(5px);">MESSAGE TOURIST</button>
+        </div>
+    </section>
+
+    <section class="explore">
+        <h2>Dashboard statistics</h2>
+        <div class="overview-grid">
+            <div class="glass-card" style="text-align: center; padding: 20px;">
+                <div class="icon-box" style="margin: 0 auto 10px; background: #fff9db; color: #fcc419;">
+                    <i data-feather="star"></i>
+                </div>
+                <h2 id="avgRating" style="font-size: 2.2rem; margin: 5px 0;">0.0</h2>
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px;">Average Rating</p>
+                <div id="starContainer" style="color: #fcc419;"></div>
+            </div>
+
+            <div class="glass-card" style="text-align: center; padding: 20px;">
+                <div class="icon-box" style="margin: 0 auto 10px; background: #e7f5ff; color: #228be6;">
+                    <i data-feather="message-square"></i>
+                </div>
+                <h2 id="totalReviews" style="font-size: 2.2rem; margin: 5px 0;">0</h2>
+                <p style="color: #666; font-size: 0.9rem;">Total Reviews</p>
+            </div>
+
+            <div class="glass-card" style="text-align: center; padding: 20px;">
+                <div class="icon-box" style="margin: 0 auto 10px; background: #ebfbee; color: #40c057;">
+                    <i data-feather="trending-up"></i>
+                </div>
+                <h2 style="font-size: 2.2rem; margin: 5px 0;">98%</h2>
+                <p style="color: #666; font-size: 0.9rem;">Tourist Satisfaction</p>
+            </div>
+        </div>
+
+        <h2>Dashboard Overview</h2>
+        <div class="card-container">
+            <div class="glass-card overview-card-plain overview-card-boxed" tabindex="0">
+                <div class="icon-box"><i data-feather="calendar"></i></div>
+                <h3 id="scheduleCardTitle" style="margin-top: 0;">My Schedule</h3>
+                <p id="scheduleCardText">No accepted tourist booking yet. Your current guide assignment will appear here once you accept a request.</p>
+                <button id="scheduleCardButton" class="btn btn-outline" style="width: 100%;">VIEW STATUS</button>
+            </div>
+
+            <div class="glass-card overview-card-plain overview-card-boxed" tabindex="0">
+                <div class="icon-box" style="background: #f3e5f5; color: #9c27b0;"><i data-feather="message-square"></i></div>
+                <h3 style="margin-top: 0;">View tourist reviews</h3>
+                <div class="review-panel-box">
+                    <div id="recentFeedbackList">
+                        <p style="color: #888; font-size: 0.85rem;">Loading…</p>
+                    </div>
+                    <a href="tourGuideProfile.html#reviews" class="review-reply-link">Reply to reviews</a>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 28px;">Pending booking requests</h2>
+        <div class="glass-card" style="padding: 20px;">
+            <p id="guidePendingBookingsLoading" style="color: #666; margin: 0 0 12px 0;">Loading…</p>
+            <table id="guidePendingBookingsTable" style="width: 100%; border-collapse: collapse; display: none;">
+                <thead>
+                    <tr>
+                        <th style="text-align:left; padding: 10px 8px;">Tourist</th>
+                        <th style="text-align:left; padding: 10px 8px;">Requested</th>
+                        <th style="text-align:left; padding: 10px 8px;">Details</th>
+                        <th style="text-align:left; padding: 10px 8px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="guidePendingBookingsBody"></tbody>
+            </table>
+            <p id="guidePendingBookingsEmpty" style="display:none; color:#666; margin: 0;">No pending booking requests.</p>
+        </div>
+    </section>
+
+    <section class="reviews">
+        <h2>Detailed Daily Tasks</h2>
+        <div class="review-grid">
+            <div class="glass-card task-card">
+                <div class="task-header">
+                    <span id="bookingTaskTime" style="font-weight: 800; color: var(--accent); font-size: 1.1rem;">--:--</span>
+                    <span id="bookingTaskStatus" style="font-size: 0.75rem; background: #f0f0f0; padding: 4px 10px; border-radius: 6px; font-weight: 600; color: #666;">OPEN</span>
+                </div>
+                <h3 id="bookingTaskTitle" style="margin: 0 0 10px 0;">No active booking</h3>
+                <p id="bookingTaskPrimaryLine" style="margin: 5px 0;"><i data-feather="users" style="width: 16px;"></i> Waiting for a tourist booking.</p>
+                <p id="bookingTaskSecondaryLine" style="margin: 5px 0;"><i data-feather="calendar" style="width: 16px;"></i> Accepted booking details will appear here.</p>
+                <div style="display: flex; gap: 12px; margin-top: 20px;">
+                    <button class="btn btn-primary" style="flex: 1;">Check-in</button>
+                    <button id="bookingMessageBtn" class="btn btn-outline" style="flex: 1;" disabled>Contact</button>
+                </div>
+            </div>
+
+            <div class="glass-card task-card">
+                <div class="icon-box" style="margin: 0 0 15px 0; background: #fff5f5; color: #e74c3c;"><i data-feather="shield"></i></div>
+                <h3 style="margin: 0 0 10px 0;">SOS / Support</h3>
+                <p>Direct priority line to Tourism Admin for Badian district.</p>
+                <button class="btn btn-danger" style="width: 100%;">INITIATE EMERGENCY CALL</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div class="message-modal" id="guideMessageModal" hidden>
+    <div class="message-modal-card" role="dialog" aria-modal="true" aria-labelledby="guideMessageModalTitle">
+        <div class="message-modal-header">
+            <div>
+                <h3 id="guideMessageModalTitle">Booking Messages</h3>
+                <p id="guideMessageModalSubtitle">Use this chat to coordinate the meetup with your tourist.</p>
+            </div>
+            <button type="button" class="message-close-btn" id="guideMessageModalClose" aria-label="Close">×</button>
+        </div>
+        <div class="message-thread" id="guideMessageThread">
+            <div class="message-empty">Select a booked tourist to start messaging.</div>
+        </div>
+        <div class="message-composer">
+            <textarea id="bookingMessageInput" maxlength="1000" placeholder="Type a message for your tourist..."></textarea>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 12px;">
+                <span id="bookingMessageStatus" class="message-status" aria-live="polite"></span>
+                <button type="button" class="btn btn-primary" id="sendBookingMessageBtn">Send message</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="logout_modal.js"></script>
+<script src="tourGuideDashboardNew.js"></script>
+<script>
+(function() {
+    var role = localStorage.getItem('role') || 'guide';
+    var userId = localStorage.getItem('userId') || '';
+    var roleKey = (role && userId) ? ('profileImage:' + role + ':' + userId) : '';
+    var src = (roleKey ? localStorage.getItem(roleKey) : null) || localStorage.getItem('profileImage');
+    if (src) {
+        var img = document.getElementById('guideProfilePic');
+        if (img) img.src = src;
+        var navPic = document.getElementById('guideNavProfilePic');
+        if (navPic) navPic.src = src;
+    }
+})();
+// Dropdown: same as tourist (profile in top right)
+(function() {
+    var btn = document.getElementById('guideNavProfilePic');
+    var menu = document.getElementById('guideNavDropdown');
+    if (btn && menu) {
+        btn.addEventListener('click', function(e) { e.stopPropagation(); menu.classList.toggle('show'); });
+        window.addEventListener('click', function() { menu.classList.remove('show'); });
+    }
+})();
+</script>
+</body>
+</html>

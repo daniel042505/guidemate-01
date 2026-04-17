@@ -1,0 +1,296 @@
+/* ADD ADMIN – matches admin dashboard fleet-status panel style */
+.add-admin-section {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 2rem 3rem;
+}
+
+.add-admin-panel {
+    padding: 2rem;
+}
+
+.add-admin-panel .panel-head {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.add-admin-panel .panel-head h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.add-admin-panel .panel-head h3 svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.panel-subtitle {
+    width: 100%;
+    font-size: 0.9rem;
+    font-weight: 400;
+    opacity: 0.9;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+/* Alerts – visible on glass background */
+.add-admin-panel .alert-msg {
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.add-admin-panel .alert-msg.ok {
+    background: rgba(76, 175, 80, 0.25);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.add-admin-panel .alert-msg.err {
+    background: rgba(244, 67, 54, 0.25);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Form – same visual language as dashboard tables */
+.add-admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.add-admin-form .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.add-admin-form label {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.add-admin-form label svg {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.9;
+}
+
+.add-admin-form input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 12px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transition: border-color 0.2s, background 0.2s;
+    box-sizing: border-box;
+}
+
+.add-admin-form input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.add-admin-form input:focus {
+    outline: none;
+    border-color: #00d4ff;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.2);
+}
+
+.add-admin-form textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    resize: vertical;
+    min-height: 80px;
+    box-sizing: border-box;
+}
+
+.add-admin-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.add-admin-form textarea:focus {
+    outline: none;
+    border-color: #00d4ff;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.location-search-box {
+    display: flex;
+    gap: 0.75rem;
+    align-items: stretch;
+}
+
+.location-search-box input {
+    flex: 1;
+}
+
+.add-admin-form .btn-search-location {
+    background: rgba(0, 212, 255, 0.2);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    white-space: nowrap;
+}
+
+.add-admin-form .btn-search-location:hover {
+    background: rgba(0, 212, 255, 0.35);
+    transform: translateY(-2px);
+}
+
+.location-search-status {
+    min-height: 1.2rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.location-search-status.is-error {
+    color: #ffd6d6;
+}
+
+.location-search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.location-result-item {
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.location-result-item:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(0, 212, 255, 0.45);
+    transform: translateY(-1px);
+}
+
+.location-picker-help {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.location-picker-map {
+    width: 100%;
+    height: 340px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.location-picker-map .leaflet-control-attribution,
+.location-picker-map .leaflet-control-zoom a {
+    color: #1d3557;
+}
+
+.add-admin-form .two-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.add-admin-form .two-cols label {
+    margin-bottom: 0.25rem;
+}
+
+@media (max-width: 768px) {
+    .add-admin-form .two-cols {
+        grid-template-columns: 1fr;
+    }
+
+    .location-search-box {
+        flex-direction: column;
+    }
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.add-admin-form .cmd-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    border: none;
+}
+
+.add-admin-form .cmd-btn svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.add-admin-form .cmd-btn.btn-primary {
+    background: #00aa6c;
+    color: #fff;
+}
+
+.add-admin-form .cmd-btn.btn-primary:hover {
+    background: #008855;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 170, 108, 0.4);
+}
+
+.add-admin-form .cmd-btn.btn-back {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.add-admin-form .cmd-btn.btn-back:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .add-admin-section {
+        padding: 0 1rem 2rem;
+    }
+    .form-actions {
+        flex-direction: column;
+    }
+    .add-admin-form .cmd-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

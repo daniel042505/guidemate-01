@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Dashboard - GuideMate</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="navigation.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body class="nav-dashboard">
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo-section">
+                <a href="landingpage.html" class="logo">GuideMate</a>
+            </div>
+            <nav class="side-nav">
+                <a href="landingpage.html"><i class='bx bx-home-alt'></i> Discover</a>
+                <a href="#" class="active"><i class='bx bx-map-alt'></i> Navigations</a>
+                <a href="mytrips.html"><i class='bx bx-briefcase'></i> My Trips</a>
+                <a href="profiletourist.html"><i class='bx bx-user'></i> Profile</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logoutBtn"><i class='bx bx-log-out'></i> Log out</a>
+            </div>
+        </aside>
+
+        <main class="nav-content">
+            <header class="top-bar">
+                <div class="search-box-container">
+                    <div class="search-box">
+                        <i class='bx bx-search'></i>
+                        <input type="text" id="searchInput" placeholder="Search Cebu spots...">
+                        <button id="searchBtn" class="btn-search-submit">Search</button>
+                    </div>
+                    <div id="searchHistory" class="search-history-dropdown" style="display: none;"></div>
+                </div>
+
+                <div class="user-status">
+                    <span id="navProfileName">Guest Traveler</span>
+                    <img src="photos/vince.jfif" alt="User" class="nav-avatar">
+                </div>
+            </header>
+
+            <section class="map-view-section">
+                <div id="map"></div>
+                <div class="map-controls-overlay" style="margin-top: 15px;">
+                    <button class="chip" onclick="getLocation()" style="background: #2d76f9; color: white; border: none;">📍 My Current Location</button>
+                </div>
+            </section>
+
+            <section class="nearby-spots">
+                <h3>Quick Nav & Route to Popular Spots</h3>
+                <p class="quick-nav-note">Spots with saved map coordinates can be searched and routed here.</p>
+                <div class="spot-chips" id="quickNavChips"></div>
+            </section>
+
+            <section class="nearby-attractions-section">
+                <div class="nearby-attractions-header">
+                    <div>
+                        <h3>Nearby Attractions</h3>
+                        <p>Use your current location to view the closest attractions around you.</p>
+                    </div>
+                </div>
+                <div id="nearbyAttractionsList" class="nearby-attractions-list">
+                    <div class="nearby-empty-state">Tap `My Current Location` to see nearby attractions.</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <script src="logout_modal.js"></script>
+    <script src="navigation.js"></script>
+</body>
+</html>

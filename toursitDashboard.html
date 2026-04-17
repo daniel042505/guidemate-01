@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Cebu | GuideMate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="touristDashboard.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">GuideMate 🌊</div>
+        <div style="display: flex; align-items: center;">
+            <span style="font-weight: 600;">My Bookings</span>
+            <span class="logout-link" id="touristDashboardLogout" style="cursor:pointer;">LOGOUT</span>
+        </div>
+    </nav>
+
+    <header class="hero-search">
+        <h1 style="font-size: 3.5rem; margin: 0; text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">Experience Cebu</h1>
+        <p style="font-size: 1.2rem; opacity: 0.9;">Book verified local guides for your next island getaway.</p>
+        <div class="search-bar">
+            <input type="text" placeholder="Where in Cebu do you want to go?">
+            <button class="search-btn">Find Guides</button>
+        </div>
+    </header>
+
+    <div class="section-container">
+        <h2 style="font-weight: 800;">Popular Cebu Destinations</h2>
+        <div class="grid">
+            
+            <div class="dest-card">
+                <div class="price-tag">₱1,500 / pax</div>
+                <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=500&q=80');"></div>
+                <div class="dest-info">
+                    <h3>Moalboal Sardine Run</h3>
+                    <p>Swim with millions of sardines and sea turtles in the crystal clear waters of Moalboal.</p>
+                </div>
+            </div>
+
+            <div class="dest-card">
+                <div class="price-tag">₱2,200 / pax</div>
+                <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1580019542155-247062e19ce4?auto=format&fit=crop&w=500&q=80');"></div>
+                <div class="dest-info">
+                    <h3>Oslob Whale Shark</h3>
+                    <p>A once-in-a-lifetime encounter with the gentle giants of the ocean in Tan-awan, Oslob.</p>
+                </div>
+            </div>
+
+            <div class="dest-card">
+                <div class="price-tag">₱800 / pax</div>
+                <div class="dest-img" style="background-image: url('https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?auto=format&fit=crop&w=500&q=80');"></div>
+                <div class="dest-info">
+                    <h3>Historical City Tour</h3>
+                    <p>Visit Magellan's Cross, Fort San Pedro, and the Basilica Minore del Sto. Niño.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="logout_modal.js"></script>
+    <script>
+        feather.replace();
+        (function() {
+            var el = document.getElementById('touristDashboardLogout');
+            if (el && typeof showLogoutConfirm === 'function') {
+                el.addEventListener('click', function() {
+                    showLogoutConfirm(function() {
+                        window.location.href = 'logout.php';
+                    }, 'Sign out? Yes or No');
+                });
+            } else if (el) {
+                el.addEventListener('click', function() { window.location.href = 'logout.php'; });
+            }
+        })();
+    </script>
+</body>
+</html>

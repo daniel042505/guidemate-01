@@ -1,0 +1,549 @@
+/* === BASE & DASHBOARD LAYOUT (mirroring navigation dashboard) === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background-color: #f4f7fc;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.dashboard-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+/* ---------- SIDEBAR (identical to navigation.html) ---------- */
+.sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #0b2a4f 0%, #123b6e 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 20px rgba(0,20,40,0.2);
+}
+
+.logo-section {
+    padding: 28px 24px 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.logo {
+    font-size: 1.9rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: white;
+    text-decoration: none;
+    background: rgba(255,255,255,0.1);
+    padding: 6px 14px;
+    border-radius: 60px;
+    display: inline-block;
+    backdrop-filter: blur(4px);
+}
+
+.side-nav {
+    flex: 1;
+    padding: 30px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.side-nav a {
+    color: #cfdfee;
+    text-decoration: none;
+    padding: 14px 20px;
+    border-radius: 14px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s;
+}
+
+.side-nav a i {
+    font-size: 1.5rem;
+    min-width: 28px;
+}
+
+.side-nav a.active {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    box-shadow: 0 6px 12px rgba(0,20,50,0.3);
+}
+
+.side-nav a:not(.active):hover {
+    background: rgba(255,255,255,0.08);
+    color: white;
+}
+
+.sidebar-footer {
+    padding: 24px 16px 30px 16px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-footer a {
+    color: #cfdfee;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.sidebar-footer a:hover {
+    background: rgba(255,69,69,0.2);
+    color: #ffe1e1;
+}
+
+/* ---------- MAIN CONTENT (trips specific) ---------- */
+.trips-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 36px 32px 36px;
+    background: #f4f7fc;
+}
+
+/* top bar similar but simplified */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-title h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #122c44;
+}
+
+.page-title i {
+    font-size: 2.4rem;
+    color: #1e4a7a;
+}
+
+.user-status {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: white;
+    padding: 8px 18px 8px 22px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+.user-status span {
+    font-weight: 600;
+    color: #1e3a5f;
+}
+
+.nav-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 44px;
+    object-fit: cover;
+    border: 2px solid #a0c6ff;
+}
+
+/* --- trips specific UI --- */
+.trips-header-actions {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.btn-primary {
+    background: #1d4e89;
+    border: none;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(23,75,135,0.35);
+    transition: 0.2s;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-primary:hover {
+    background: #2265aa;
+    transform: translateY(-2px);
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 8px;
+    background: white;
+    padding: 6px;
+    border-radius: 48px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+}
+
+.filter-tab {
+    padding: 8px 22px;
+    border-radius: 40px;
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #446688;
+    transition: 0.15s;
+}
+
+.filter-tab.active {
+    background: #1d4e89;
+    color: white;
+    box-shadow: 0 3px 8px #1d4e8940;
+}
+
+.trips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 26px;
+    margin-top: 16px;
+}
+
+.trip-card {
+    background: white;
+    border-radius: 32px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(0, 25, 60, 0.08);
+    transition: all 0.2s;
+    border: 1px solid rgba(0,70,120,0.05);
+}
+
+.trip-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 24px 38px -10px rgba(20,60,130,0.25);
+}
+
+.trip-img {
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.trip-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(6px);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 60px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.trip-badge.planned {
+    background: #2e7ab3e6;
+}
+.trip-badge.completed {
+    background: #1f7a4de6;
+}
+
+.trip-info {
+    padding: 22px 22px 24px;
+}
+
+.trip-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.trip-title h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #103450;
+}
+
+.trip-title i {
+    color: #f5b342;
+    font-size: 1.6rem;
+}
+
+.trip-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+    margin: 16px 0 20px;
+    color: #2b4b6e;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.trip-details span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.trip-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1.5px solid #cddbe9;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+    color: #1b4c7c;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: 0.15s;
+    font-size: 0.9rem;
+}
+
+.btn-outline:hover {
+    background: #e2edff;
+    border-color: #2b6eaf;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: #c04444;
+    font-weight: 500;
+    margin-left: auto;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    background: #eef3fb;
+    border-radius: 60px;
+    padding: 60px 30px;
+    text-align: center;
+    color: #2f577b;
+    font-size: 1.2rem;
+    border: 2px dashed #b7d3f0;
+}
+
+.toast-msg {
+    visibility: hidden;
+    min-width: 250px;
+    background: #1e4e79;
+    color: white;
+    text-align: center;
+    padding: 16px 24px;
+    border-radius: 60px;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    box-shadow: 0 16px 30px #00000030;
+    font-weight: 500;
+    z-index: 999;
+}
+.toast-msg.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.trip-message-modal[hidden] {
+    display: none;
+}
+
+.trip-message-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 25, 46, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.trip-message-card {
+    width: min(680px, 100%);
+    max-height: 85vh;
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 22px 48px rgba(14, 35, 58, 0.24);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.trip-message-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 24px 16px;
+    border-bottom: 1px solid rgba(16, 52, 80, 0.08);
+}
+
+.trip-message-header h3 {
+    margin: 0;
+    color: #103450;
+}
+
+.trip-message-header p {
+    margin: 6px 0 0;
+    color: #5b7086;
+    font-size: 0.92rem;
+}
+
+.trip-message-close {
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 999px;
+    background: #eef4fb;
+    color: #1d4e89;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.trip-message-thread {
+    padding: 22px 24px 24px;
+    overflow-y: auto;
+    background: #f7fbff;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.trip-message-bubble {
+    max-width: 82%;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 14px 16px;
+    color: #19354e;
+    box-shadow: 0 6px 18px rgba(16, 52, 80, 0.08);
+}
+
+.trip-message-bubble.guide {
+    align-self: flex-start;
+    background: #e8f1ff;
+}
+
+.trip-message-bubble.tourist {
+    align-self: flex-end;
+    background: #dff7ea;
+}
+
+.trip-message-bubble strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #607588;
+}
+
+.trip-message-bubble p {
+    margin: 0;
+    white-space: pre-wrap;
+    line-height: 1.55;
+}
+
+.trip-message-bubble small {
+    display: block;
+    margin-top: 8px;
+    color: #708399;
+    font-size: 0.78rem;
+}
+
+.trip-message-empty {
+    text-align: center;
+    color: #5b7086;
+    padding: 36px 12px;
+}
+
+.trip-message-compose {
+    border-top: 1px solid rgba(29, 78, 137, 0.12);
+    padding: 16px 24px 20px;
+    background: #fff;
+}
+
+.trip-message-compose textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 88px;
+    border: 1px solid #d4e2f3;
+    border-radius: 16px;
+    padding: 12px 14px;
+    font: inherit;
+    color: #19354e;
+    background: #f9fcff;
+    outline: none;
+}
+
+.trip-message-compose textarea:focus {
+    border-color: #1d72d2;
+    box-shadow: 0 0 0 3px rgba(29, 114, 210, 0.12);
+}
+
+.trip-message-compose-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.trip-message-status {
+    min-height: 20px;
+    font-size: 0.9rem;
+    color: #5b7086;
+}
+
+.trip-message-status.success {
+    color: #1f7a4d;
+}
+
+.trip-message-status.error {
+    color: #c0392b;
+}
+
+/* responsive touch */
+@media (max-width: 700px) {
+    .trips-content { padding: 20px; }
+    .trip-message-compose-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

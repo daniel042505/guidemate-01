@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guidemate</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">GuideMate 🌴</div>
+    <nav>
+        <a href="#">Discover</a>
+        <a href="mytrips.html">My Trips</a>
+        <a href="#">Review</a>
+    </nav>
+    <div class="nav-right">
+    <a href="signinTouristAdmin.html" id="loginLink">
+        <button class="login-btn" id="loginBtn">Login</button>
+    </a>
+
+    <div class="profile-container" id="profileContainer" style="display:none;">
+        <img src="photos/vince.jfif" alt="Profile" class="profile-pic" id="profilePic">
+        <div class="dropdown-menu" id="dropdownMenu">
+            <div class="menu-arrow"></div>
+            <a href="profiletourist.html">Profile</a>
+           <a href="navigation.html">Navigation</a>
+            <a href="#">Messages</a>
+            <a href="#">Account info</a>
+            <hr>
+            <button type="button" class="sign-out-link" onclick="handleLogout()">Sign out</button>
+        </div>
+    </div>
+</div>
+</header>
+
+
+<section class="hero">
+    <h1>Where to?</h1>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-type="locations">Locations</button>
+        <button class="tab-btn" data-type="guides">Tour Guides</button>
+    </div>
+
+    <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search locations...">
+    <button type="submit">Search</button>
+</div>
+</section>
+
+<section class="explore">
+    <h2 class="explore-heading" id="sectionTitle">Explore experiences near Cebu City</h2>
+    <p class="explore-subtitle">Can't-miss picks near you</p>
+    <div class="explore-scroll-wrap">
+        <button type="button" class="scroll-arrow scroll-arrow-left" id="scrollLeft" aria-label="Previous spots">←</button>
+        <div class="card-container" id="cardsContainer"></div>
+        <button type="button" class="scroll-arrow scroll-arrow-right" id="scrollRight" aria-label="Next spots">→</button>
+    </div>
+    <div class="see-more-container">
+        <a href="browse.html" class="see-more-btn">See More</a>
+    </div>
+</section>
+
+<section class="spot-guides" id="spotGuidesSection" hidden>
+    <article class="spot-detail-card">
+        <div class="spot-detail-media">
+            <img id="spotDetailImage" src="photos/default.jpg" alt="Selected destination">
+        </div>
+        <div class="spot-detail-content">
+            <h2 class="spot-detail-name" id="spotDetailName">Selected destination</h2>
+            <div class="spot-detail-rating" id="spotDetailRating"></div>
+            <p class="spot-detail-address" id="spotDetailAddress"></p>
+            <p class="spot-detail-description" id="spotDetailDescription"></p>
+            <div class="spot-detail-actions">
+                <button type="button" class="spot-guides-open-btn" id="spotGuidesOpenBtn">View in Tour Guides tab</button>
+            </div>
+        </div>
+    </article>
+    <h3 class="spot-guides-heading" id="spotGuidesTitle">Available Tour Guides</h3>
+    <p class="spot-guides-subtitle" id="spotGuidesSubtitle">Tap a location card above to view guides serving that area.</p>
+    <div class="spot-guides-list" id="spotGuidesContainer"></div>
+</section>
+
+<div class="location-modal" id="locationDetailModal" hidden>
+    <div class="location-modal__backdrop" id="locationDetailBackdrop"></div>
+    <div class="location-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="locationDetailModalName">
+        <button type="button" class="location-modal__close" id="locationDetailCloseBtn" aria-label="Close location details">×</button>
+        <div class="location-modal__media">
+            <img id="locationDetailModalImage" src="photos/default.jpg" alt="Selected location">
+        </div>
+        <div class="location-modal__content">
+            <h2 class="location-modal__name" id="locationDetailModalName">Selected location</h2>
+            <div class="location-modal__rating" id="locationDetailModalRating"></div>
+            <p class="location-modal__address" id="locationDetailModalAddress"></p>
+            <p class="location-modal__description" id="locationDetailModalDescription"></p>
+            <button type="button" class="location-modal__guides-btn" id="locationDetailModalGuidesBtn">Show nearby tour guides</button>
+        </div>
+    </div>
+</div>
+
+
+
+<section class="reviews">
+    <h2>What Travelers Say</h2>
+    <div class="review-grid" id="reviewContainer"></div>
+</section>
+
+<footer class="site-footer">
+    <div class="footer-main">
+        <div class="footer-col footer-about">
+            <h3 class="footer-logo">GuideMate</h3>
+            <p>
+                “New to Cebu City? GuideMate is here to guide you every step of the way.”
+            </p>
+            <div class="footer-social">
+                <a href="#" aria-label="Facebook">f</a>
+                <a href="#" aria-label="Twitter">x</a>
+                <a href="#" aria-label="Instagram">i</a>
+                <a href="#" aria-label="YouTube">y</a>
+            </div>
+        </div>
+
+
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="landingpage.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="browse.html">Schedule</a>
+            <a href="signinTouristAdmin.html">Contact</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Contact Us</h4>
+            <p class="footer-contact-item">&#128205; Cebu City, Philippines</p>
+        </div>
+    </div>
+
+    <div class="footer-copy">
+        <p>Copyright &copy; 2026 | Developed by SCC Students - All Rights Reserved</p>
+    </div>
+</footer>
+
+<script src="logout_modal.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuideMate | Sign In</title>
+    <script src="https://kit.fontawesome.com/ed5caa5a8f.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="signinTouristAdmin.css">
+</head>
+<body>
+
+    <div class="signup-wrapper">
+        <div class="main-card">
+            <div class="image-panel signin-bg">
+                <div class="overlay"></div>
+                <div class="panel-content">
+                    <div class="brand-logo">
+                        <i class="fa-solid fa-earth-americas"></i>
+                        <span>GuideMate</span>
+                    </div>
+                    <div class="hero-text">
+                        <h1>Welcome Back, Explorer.</h1>
+                        <p>Sign in to continue your journey and discover your next destination.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-panel">
+                <div class="form-header">
+                    <h2>Sign In</h2>
+                    <p>Welcome back! Please enter your details.</p>
+                </div>
+                
+         <form id="signin-form" action="signinTouristAdmin.php" method="POST">
+            <div class="form-stack" style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="input-box">
+                    <label for="signin-username"><i class="fa-regular fa-user"></i> Username</label>
+                    <input type="text" name="username" id="signin-username" autocomplete="username" placeholder="Enter your username" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="signin-password"><i class="fa-solid fa-lock"></i> Password</label>
+                    <input type="password" name="password" id="signin-password" autocomplete="current-password" placeholder="Enter your password" required>
+                </div>
+            </div>
+
+            <button type="submit" class="primary-btn" style="margin-top: 20px;">Sign In</button>
+            
+            <p class="switch-link">
+                Don't have an account? <a href="SignupTouristAdmin.html">Create one here</a>
+            </p>
+        </form>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('signin-form').addEventListener('submit', function(e) {
+            const user = this.username.value.trim();
+            const pass = this.password.value.trim();
+            if (!user) {
+                e.preventDefault();
+                alert("Please enter your username.");
+                this.username.focus();
+                return;
+            }
+            if (!pass) {
+                e.preventDefault();
+                alert("Please enter your password.");
+                this.password.focus();
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

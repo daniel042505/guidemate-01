@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Trips · GuideMate</title>
+    <!-- keep same leaflet (not needed for trips page, but for consistency) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="mytrips.css">
+</head>
+<body class="trips-dashboard">
+    <div class="dashboard-container">
+        <!-- SIDEBAR - identical to navigation.html -->
+        <aside class="sidebar">
+    <div class="logo-section">
+        <a href="landingpage.html" class="logo">GuideMate</a>
+    </div>
+    <nav class="side-nav">
+        <a href="landingpage.html"><i class='bx bx-home-alt'></i> Discover</a>
+        <a href="navigation.html"><i class='bx bx-map-alt'></i> Navigations</a>
+        <a href="#" class="active"><i class='bx bx-briefcase' ></i> My Trips</a>
+       
+    </nav>
+    </aside>
+
+        <!-- MAIN TRIPS CONTENT -->
+        <main class="trips-content">
+            <header class="top-bar">
+                <div class="page-title">
+                    <i class='bx bx-briefcase'></i>
+                    <h2>My Trips</h2>
+                </div>
+                <div class="user-status">
+    <span id="navProfileName">Guest Traveler</span>
+    <img src="photos/vince.jfif" alt="User" class="nav-avatar">
+</div>
+            </header>
+
+            <!-- Trips controls (filter + new trip) -->
+            <div class="trips-header-actions">
+                <button class="btn-primary" id="addNewTripBtn"><i class='bx bx-plus-circle'></i> Book a guide</button>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">All trips</button>
+                    <button class="filter-tab" data-filter="planned">Planned</button>
+                    <button class="filter-tab" data-filter="completed">Completed</button>
+                </div>
+            </div>
+
+            <!-- Trips grid (cards injected by js) -->
+            <div class="trips-grid" id="tripsGridContainer">
+                <!-- dynamic rendering -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toastMessage" class="toast-msg">✨ Trip updated</div>
+
+    <div id="tripMessagesModal" class="trip-message-modal" hidden>
+        <div class="trip-message-card" role="dialog" aria-modal="true" aria-labelledby="tripMessagesTitle">
+            <div class="trip-message-header">
+                <div>
+                    <h3 id="tripMessagesTitle">Guide Messages</h3>
+                    <p id="tripMessagesSubtitle">Use this chat to coordinate your trip details with your guide.</p>
+                </div>
+                <button type="button" id="tripMessagesClose" class="trip-message-close" aria-label="Close">×</button>
+            </div>
+            <div id="tripMessagesThread" class="trip-message-thread">
+                <div class="trip-message-empty">No messages for this booking yet.</div>
+            </div>
+            <div class="trip-message-compose">
+                <textarea id="tripMessageInput" rows="3" maxlength="1000" placeholder="Write your message to the guide. Include the date, time, or meeting place if needed."></textarea>
+                <div class="trip-message-compose-row">
+                    <span id="tripMessageStatus" class="trip-message-status" aria-live="polite"></span>
+                    <button type="button" id="tripMessageSendBtn" class="btn-primary">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JavaScript -->
+    <script src="mytrips.js"></script>
+</body>
+</html>

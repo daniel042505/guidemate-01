@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Spotlight | Cebu AdventureSync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+
+    <nav>
+        <div class="logo" style="font-weight: 800; font-size: 1.3rem; letter-spacing: 1px;">GuideMate 🌴</div>
+        <div class="nav-links">
+            <span>DASHBOARD</span>
+            <span>MY TOURS</span>
+            <span>GUESTS</span>
+            <span class="logout-btn" onclick="handleLogout()">
+                <i data-feather="log-out" style="width: 14px;"></i> LOGOUT
+            </span>
+        </div>
+        <div style="font-size: 0.9rem; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 10px; display: flex; align-items: center;">
+            <img id="guideProfilePic" src="photos/default.jpg" alt="Guide Profile" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+            Guide: <b>John Lloyd Noya</b>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <span style="font-weight: 600; letter-spacing: 3px; color: #51ff9a; text-transform: uppercase;">Current Assignment</span>
+        <h1>CANYONEERING IN BADIAN</h1>
+        <p>Your group of 12 travelers is ready. Ensure all safety gear is double-checked before the first cliff jump at 9:30 AM. Stay hydrated and lead the way!</p>
+        <div>
+            <button class="btn btn-primary" style="background: white; color: var(--accent);">ACTIVATE GPS</button>
+            <button class="btn btn-primary" style="background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.5); backdrop-filter: blur(5px);">GUEST MANIFEST</button>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <div class="glass-card">
+            <div class="icon-box"><i data-feather="calendar"></i></div>
+            <h3 style="margin-top: 0;">My Schedule</h3>
+            <p>You have 3 upcoming tours this week including the Simala Shrine pilgrimage.</p>
+            <button class="btn btn-outline" style="width: 100%;">VIEW ALL</button>
+        </div>
+
+        <div class="glass-card">
+            <div class="icon-box"><i data-feather="dollar-sign"></i></div>
+            <h3 style="margin-top: 0;">Incentives</h3>
+            <p>Current earnings: <b style="color: var(--accent); font-size: 1.2rem;">₱4,500</b> from tips and bonuses this week.</p>
+            <button class="btn btn-outline" style="width: 100%;">PAYOUT INFO</button>
+        </div>
+
+        <h2 class="section-title">Detailed Daily Tasks</h2>
+
+        <div class="glass-card task-card">
+            <div class="task-header">
+                <span style="font-weight: 800; color: var(--accent); font-size: 1.1rem;">08:00 AM</span>
+                <span style="font-size: 0.75rem; background: #f0f0f0; padding: 4px 10px; border-radius: 6px; font-weight: 600; color: #666;">UPCOMING</span>
+            </div>
+            <h3 style="margin: 0 0 10px 0;">Bantayan Island Hopping</h3>
+            <p style="margin: 5px 0;"><i data-feather="map-pin" style="width: 16px; vertical-align: middle; margin-right: 5px;"></i> Sta. Fe Port Meeting Point</p>
+            <p style="margin: 5px 0;"><i data-feather="users" style="width: 16px; vertical-align: middle; margin-right: 5px;"></i> 8 Travelers (International Group)</p>
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+                <button class="btn btn-primary" style="flex: 1; margin-right: 0;">Check-in</button>
+                <button class="btn btn-outline" style="flex: 1;">Contact</button>
+            </div>
+        </div>
+
+        <div class="glass-card task-card">
+            <div class="icon-box" style="margin: 0 0 15px 0; background: #fff5f5; color: #e74c3c;"><i data-feather="shield"></i></div>
+            <h3 style="margin: 0 0 10px 0;">SOS / Support</h3>
+            <p>Direct priority line to Tourism Admin and local emergency responders for Badian district.</p>
+            <button class="btn btn-danger">INITIATE EMERGENCY CALL</button>
+        </div>
+
+    </div>
+
+    <script src="logout_modal.js"></script>
+    <script>
+        feather.replace();
+        (function() {
+            var img = document.getElementById('guideProfilePic');
+            if (img) {
+                var role = localStorage.getItem('role') || 'guide';
+                var userId = localStorage.getItem('userId') || '';
+                var roleKey = (role && userId) ? ('profileImage:' + role + ':' + userId) : '';
+                var src = (roleKey ? localStorage.getItem(roleKey) : null) || localStorage.getItem('profileImage');
+                if (src) img.src = src;
+            }
+        })();
+        function handleLogout() {
+            function clearStoredSessionState() {
+                var activeRole = localStorage.getItem('role') || '';
+                var activeUserId = localStorage.getItem('userId') || '';
+
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('role');
+                localStorage.removeItem('touristId');
+                localStorage.removeItem('guideId');
+                localStorage.removeItem('firstName');
+                localStorage.removeItem('lastName');
+                localStorage.removeItem('fullName');
+                localStorage.removeItem('profileImage');
+                localStorage.removeItem('userReviews');
+
+                if (activeRole && activeUserId) {
+                    localStorage.removeItem('firstName:' + activeRole + ':' + activeUserId);
+                    localStorage.removeItem('lastName:' + activeRole + ':' + activeUserId);
+                    localStorage.removeItem('profileName:' + activeRole + ':' + activeUserId);
+                    localStorage.removeItem('profileImage:' + activeRole + ':' + activeUserId);
+                }
+            }
+
+            if (typeof showLogoutConfirm === 'function') {
+                showLogoutConfirm(function() {
+                    clearStoredSessionState();
+                    window.location.href = "logout.php";
+                });
+            } else {
+                clearStoredSessionState();
+                window.location.href = "logout.php";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+.hero {
+            /* Applying the kaws.jpg as the background for Canyoneering in Badian */
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), 
+                        url('kaws.jpg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 0 0 30px 30px;
+            padding: 80px 40px;
+            color: white;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .review-item {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .review-item:last-child { border-bottom: none; }
+
+        /* Tour guide profile block: centered, constrained width */
+        .tour-guide-profile-block {
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+        }

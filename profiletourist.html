@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile - GuideMate</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="profile-page">
+<header class="navbar">
+    <div class="logo">
+        <a href="landingpage.html">GuideMate</a>
+    </div>
+    <div class="nav-right">
+        <div class="profile-container">
+            <img src="photos/vince.jfif" alt="Profile" class="profile-pic" id="profileDropdownBtn">
+            
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="landingpage.html">Discover</a>
+                <a href="#">My trips</a>
+                <a href="#">Bookings</a>
+                <hr>
+                <a href="#" id="logoutBtn" class="sign-out-link">Sign out</a>
+            </div>
+        </div>
+    </div>
+</header> 
+
+<main class="profile-main">
+    <main class="profile-main">
+        <div class="cover-section">
+            <button class="add-cover-btn">📷 Add cover photo</button>
+        </div>
+
+      <div class="user-header-card">
+    <div class="user-info-flex">
+        <img src="photos/vince.jfif" alt="User" class="large-avatar">
+       <div class="user-details">
+    <h1 id="profileName">Loading...</h1> 
+    <p class="handle" id="profileHandle">@username</p> 
+</div>
+        <button type="button" class="edit-profile-toggle" id="editProfileToggle">Edit profile</button>
+    </div>
+    <div id="profileNotice" class="profile-notice" aria-live="polite"></div>
+    <section class="profile-edit-panel" id="profileEditPanel" hidden>
+        <form id="touristProfileForm" class="profile-edit-form" enctype="multipart/form-data">
+            <div class="profile-edit-grid">
+                <div class="profile-field">
+                    <label for="editFirstName">First name</label>
+                    <input type="text" id="editFirstName" name="first_name" maxlength="50" required>
+                </div>
+                <div class="profile-field">
+                    <label for="editLastName">Last name</label>
+                    <input type="text" id="editLastName" name="last_name" maxlength="50" required>
+                </div>
+            </div>
+            <div class="profile-field">
+                <label for="editProfileImage">Profile photo</label>
+                <input type="file" id="editProfileImage" name="profile_image" accept="image/png,image/jpeg,image/gif">
+                <p class="profile-edit-help">Leave this empty if you only want to update your name.</p>
+                <p class="profile-edit-help profile-cooldown-text" id="profilePicCooldownText"></p>
+            </div>
+            <div class="profile-edit-actions">
+                <button type="submit" class="profile-primary-btn" id="saveProfileChangesBtn">Save changes</button>
+                <button type="button" class="profile-secondary-btn" id="cancelProfileEdit">Cancel</button>
+            </div>
+        </form>
+    </section>
+    
+    <nav class="profile-tabs">
+        <a href="#" class="active">Activity feed</a>
+        <a href="#">Trips</a>
+        <a href="#">Photos</a>
+        <a href="#">Reviews</a>
+    </nav>
+</div>
+
+            </div>
+            
+
+        <div class="profile-content-grid">
+            <aside class="sidebar-achievements">
+                <h3>Your Achievements</h3>
+                <p>Start sharing to unlock</p>
+                <div class="achievement-item locked">
+                    <div class="icon">🔒</div>
+                    <div>
+                        <strong>Write your first review</strong>
+                        <p>Unlock review milestones</p>
+                    </div>
+                </div>
+                <div class="achievement-item locked">
+                    <div class="icon">🔒</div>
+                    <div>
+                        <strong>Upload your first photo</strong>
+                        <p>Unlock photo milestones</p>
+                    </div>
+                </div>
+                <button class="view-all-btn">View all</button>
+            </aside>
+
+            <section class="main-feed">
+                <div id="reviewsContent" style="display:none;">
+                    <div class="review-submission-section">
+                        <h2>Write a Review</h2>
+                        <form id="profileReviewForm" class="profile-review-form">
+                            <div class="form-group">
+                                <label for="reviewType">Review Type</label>
+                                <select id="reviewType" required>
+                                    <option value="">Select review type</option>
+                                    <option value="location">Location</option>
+                                    <option value="guide">Tour Guide</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reviewLocation">Location Name</label>
+                                <select id="reviewLocation" required>
+                                    <option value="">Select a location</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reviewGuide">Tour Guide Name</label>
+                                <select id="reviewGuide" required>
+                                    <option value="">Select a tour guide</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tourRating">Rating</label>
+                                <div class="star-rating">
+                                    <input type="radio" name="tourRating" value="1" id="tourStar1">
+                                    <label for="tourStar1">★</label>
+                                    <input type="radio" name="tourRating" value="2" id="tourStar2">
+                                    <label for="tourStar2">★★</label>
+                                    <input type="radio" name="tourRating" value="3" id="tourStar3">
+                                    <label for="tourStar3">★★★</label>
+                                    <input type="radio" name="tourRating" value="4" id="tourStar4">
+                                    <label for="tourStar4">★★★★</label>
+                                    <input type="radio" name="tourRating" value="5" id="tourStar5">
+                                    <label for="tourStar5">★★★★★</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tourReviewComment">Your Review</label>
+                                <textarea id="tourReviewComment" placeholder="Share your experience..." rows="5" required></textarea>
+                            </div>
+
+                            <button type="submit" class="profile-submit-btn">Submit Review</button>
+                            <div id="profileReviewMessage"></div>
+                        </form>
+                    </div>
+
+                    <div class="your-reviews-section">
+                        <h2>Your Reviews</h2>
+                        <div id="yourReviewsList" class="reviews-list">
+                            <p>You haven't submitted any reviews yet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="activityContent">
+                    <div class="empty-state-card">
+                        <h2>Create your first Trip!</h2>
+                        <p>Build wish lists, share recommendations, and organize travel plans with Trips! <a href="#">Create Trip</a></p>
+                    </div>
+                    <div class="favorite-destinations-section">
+                        <h2>Favorite Destinations</h2>
+                        <div id="favoriteDestinationsList" class="favorite-destinations-list">
+                            <p>Loading your favorite destinations...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+<script src="logout_modal.js"></script>
+<script src="script.js"></script>
+<script src="profile-script.js"></script>
+</body>
+</html>

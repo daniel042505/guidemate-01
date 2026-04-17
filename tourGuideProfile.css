@@ -1,0 +1,318 @@
+/* Tour guide profile: same layout as tourist, content = services, experience, service areas, rating, respond to reviews */
+
+:root {
+    --accent: #0d9488;
+}
+
+/* Page background + typography tuning (scoped) */
+.guide-profile-page {
+    background: #f6f8fb;
+}
+
+.guide-profile-page .handle {
+    color: #6b7280;
+}
+
+.guide-profile-page .cover-section {
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+}
+
+/* Move header card slightly lower so avatar isn't visually clipped */
+.guide-profile-page .user-header-card {
+    margin-top: -30px;
+}
+
+@media (max-width: 768px) {
+    .guide-profile-page .user-header-card {
+        margin-top: -18px;
+    }
+}
+
+/* Same shell as tourist: grid layout */
+.profile-content-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+}
+@media (max-width: 768px) {
+    .profile-content-grid { grid-template-columns: 1fr; }
+}
+.main-feed {
+    min-width: 0;
+}
+.guide-profile-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Header: Change profile picture as button-style link */
+.user-header-card .header-actions .edit-btn {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.guide-profile-page .header-actions {
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.guide-profile-page .edit-btn {
+    background: var(--accent);
+    border-radius: 999px;
+    padding: 10px 18px;
+    box-shadow: 0 8px 20px rgba(13, 148, 136, 0.22);
+}
+
+.guide-profile-page .edit-btn:hover {
+    filter: brightness(0.98);
+    transform: translateY(-1px);
+}
+
+.guide-change-note-inline {
+    display: block;
+    font-size: 0.75rem;
+    color: #8b9098;
+    margin-top: 6px;
+}
+
+.guide-profile-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.06);
+}
+
+.guide-profile-details-card{
+    border: 2px solid rgba(13, 148, 136, 0.38);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(13, 148, 136, 0.06) 0%, #ffffff 26%);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.guide-profile-details-card::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, rgba(13, 148, 136, 0.75), rgba(16, 185, 129, 0.45));
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    pointer-events: none;
+}
+
+.guide-profile-card h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    color: #333;
+}
+
+.guide-profile-desc {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0 0 16px 0;
+}
+
+.guide-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.guide-field label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.guide-field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d7dbe3;
+    border-radius: 12px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    background: #fbfcfe;
+}
+
+.guide-field input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.12);
+}
+
+.guide-save-msg {
+    margin: 0;
+    font-size: 0.85rem;
+    display: none;
+}
+
+.guide-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.guide-field-full {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+    .guide-form-grid {
+        grid-template-columns: 1fr;
+    }
+    .guide-field-full { grid-column: auto; }
+}
+
+.guide-save-row {
+    margin-top: 16px;
+    display: grid;
+    gap: 10px;
+    max-width: 420px;
+}
+
+.guide-profile-page .profile-submit-btn {
+    background: var(--accent);
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.guide-profile-page .profile-submit-btn:hover {
+    background: #0b7f76;
+}
+
+/* Profile rating in sidebar (same as tourist achievements block) */
+.guide-rating-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.sidebar-rating {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+.sidebar-rating .guide-rating-stars {
+    font-size: 1.5rem;
+}
+.guide-rating-stars {
+    color: #fcc419;
+    font-size: 1.5rem;
+}
+.guide-rating-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #333;
+}
+.guide-rating-count {
+    font-size: 0.9rem;
+    color: #666;
+}
+.guide-profile-card .guide-field {
+    margin-bottom: 0;
+}
+.guide-profile-card .guide-field + .guide-field {
+    margin-top: 16px;
+}
+
+/* 7.6 Tourist reviews & respond */
+.guide-reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.guide-reviews-empty {
+    color: #888;
+    margin: 0;
+}
+.guide-review-item {
+    padding: 14px;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+.guide-review-header {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+.guide-review-comment {
+    margin: 0 0 10px 0;
+    color: #555;
+    font-size: 0.95rem;
+}
+.guide-review-reply {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(13, 148, 136, 0.08);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #0b615a;
+}
+.guide-review-respond {
+    margin-top: 10px;
+}
+.guide-reply-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d7dbe3;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    font-family: inherit;
+    background: #fbfcfe;
+}
+.guide-reply-btn {
+    font-size: 0.85rem;
+    padding: 8px 16px;
+}
+.guide-review-tools {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+.guide-report-review-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    background: #fff4e6;
+    color: #c05621;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.guide-report-review-btn:hover:not(:disabled) {
+    background: #ffe8cc;
+}
+.guide-report-review-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+.guide-review-flag {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #fff3bf;
+    color: #8d6b00;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
