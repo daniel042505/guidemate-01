@@ -141,9 +141,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <nav class="glass-nav">
         <div class="logo">GuideMate Admin</div>
         <div class="nav-links">
-            <a href="adminDashboard.php" style="color:inherit;text-decoration:none;">REAL-TIME MAP</a>
-            <a href="adminDashboard.php" style="color:inherit;text-decoration:none;">FLEET STATUS</a>
-            <a href="adminDashboard.php" style="color:inherit;text-decoration:none;">REVENUE</a>
+            <a href="adminDashboard.php#real-time-map" style="color:inherit;text-decoration:none;">REAL-TIME MAP</a>
+            <a href="adminDashboard.php#fleet-status" style="color:inherit;text-decoration:none;">FLEET STATUS</a>
+            <a href="adminDashboard.php#revenue" style="color:inherit;text-decoration:none;">REVENUE</a>
             <a href="add_admin.php" style="color:inherit;text-decoration:none;">ADD ADMIN</a>
             <span class="nav-active">ADD SPOT</span>
             <a href="logout.php" class="logout-link">LOGOUT</a>

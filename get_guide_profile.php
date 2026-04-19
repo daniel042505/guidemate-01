@@ -14,6 +14,12 @@ if ($col && $col->num_rows > 0) {
     $has_profile_image_updated_at = true;
 }
 
+$has_cover_image = false;
+$colCover = $mysqli->query("SHOW COLUMNS FROM tour_guides LIKE 'cover_image'");
+if ($colCover && $colCover->num_rows > 0) {
+    $has_cover_image = true;
+}
+
 $guide_id = isset($_GET['guide_id']) ? (int)$_GET['guide_id'] : (isset($_POST['guide_id']) ? (int)$_POST['guide_id'] : 0);
 
 $user_id = null;
@@ -22,13 +28,15 @@ if (!empty($_SESSION['role']) && $_SESSION['role'] === 'guide' && !empty($_SESSI
 }
 
 if ($user_id) {
-    $select = "guide_id, first_name, last_name, experience_years, service_areas, specialization";
+    $select = "guide_id, first_name, last_name, experience_years, service_areas, specialization, profile_image";
     if ($has_profile_image_updated_at) $select .= ", profile_image_updated_at";
+    if ($has_cover_image) $select .= ", cover_image";
     $stmt = $mysqli->prepare("SELECT $select FROM tour_guides WHERE user_id = ?");
     $stmt->bind_param('i', $user_id);
 } elseif ($guide_id > 0) {
-    $select = "guide_id, first_name, last_name, experience_years, service_areas, specialization";
+    $select = "guide_id, first_name, last_name, experience_years, service_areas, specialization, profile_image";
     if ($has_profile_image_updated_at) $select .= ", profile_image_updated_at";
+    if ($has_cover_image) $select .= ", cover_image";
     $stmt = $mysqli->prepare("SELECT $select FROM tour_guides WHERE guide_id = ?");
     $stmt->bind_param('i', $guide_id);
 } else {
@@ -66,5 +74,7 @@ echo json_encode([
     'specialization' => $row['specialization'] ?? '',
     'avg_rating' => $avg_rating,
     'review_count' => $review_count,
+    'profile_image' => $row['profile_image'] ?? null,
+    'cover_image' => $has_cover_image ? ($row['cover_image'] ?? null) : null,
     'profile_image_updated_at' => $has_profile_image_updated_at ? ($row['profile_image_updated_at'] ?? null) : null,
 ]);

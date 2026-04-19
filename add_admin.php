@@ -91,10 +91,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <nav class="glass-nav">
         <div class="logo">GuideMate Admin</div>
         <div class="nav-links">
-            <a href="adminDashboard.php" style="color:inherit;text-decoration:none;font-size:0.9rem;">REAL-TIME MAP</a>
-            <a href="adminDashboard.php" style="color:inherit;text-decoration:none;font-size:0.9rem;">FLEET STATUS</a>
-            <a href="adminDashboard.php" style="color:inherit;text-decoration:none;font-size:0.9rem;">REVENUE</a>
+            <a href="adminDashboard.php#real-time-map" style="color:inherit;text-decoration:none;font-size:0.9rem;">REAL-TIME MAP</a>
+            <a href="adminDashboard.php#fleet-status" style="color:inherit;text-decoration:none;font-size:0.9rem;">FLEET STATUS</a>
+            <a href="adminDashboard.php#revenue" style="color:inherit;text-decoration:none;font-size:0.9rem;">REVENUE</a>
             <span class="nav-active">ADD ADMIN</span>
+            <a href="add_spot.php" style="color:inherit;text-decoration:none;font-size:0.9rem;">ADD SPOT</a>
             <a href="logout.php" class="logout-link">LOGOUT</a>
         </div>
         <div class="user-id"><i data-feather="shield"></i> Super_Admin: <b><?= htmlspecialchars($adminName) ?></b></div>

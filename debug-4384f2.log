@@ -1,2 +1,4 @@
-{"sessionId":"4384f2","timestamp":1776586411455,"location":"signinTouristAdmin.php","message":"POST received","data":{"username":"awsaws","username_len":6,"has_password":true},"hypothesisId":"H3,H4"}
-{"sessionId":"4384f2","timestamp":1776586411459,"location":"signinTouristAdmin.php","message":"lookup result","data":{"active_row_found":true,"user_by_username":{"id":32,"role":"tourist","status":"Active"}},"hypothesisId":"H1,H2,H5"}
+{"sessionId":"4384f2","timestamp":1776594045711,"location":"signinTouristAdmin.php","message":"POST received","data":{"username":"noya","username_len":4,"has_password":true},"hypothesisId":"H3,H4"}
+{"sessionId":"4384f2","timestamp":1776594045717,"location":"signinTouristAdmin.php","message":"lookup result","data":{"active_row_found":true,"user_by_username":{"id":31,"role":"guide","status":"Active"}},"hypothesisId":"H1,H2,H5"}
+{"sessionId":"4384f2","timestamp":1776595573293,"location":"signinTouristAdmin.php","message":"POST received","data":{"username":"awsaws","username_len":6,"has_password":true},"hypothesisId":"H3,H4"}
+{"sessionId":"4384f2","timestamp":1776595573297,"location":"signinTouristAdmin.php","message":"lookup result","data":{"active_row_found":true,"user_by_username":{"id":32,"role":"tourist","status":"Active"}},"hypothesisId":"H1,H2,H5"}

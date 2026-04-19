@@ -27,8 +27,12 @@
 </header>
 
 <main class="profile-main">
-    <div class="cover-section">
-        <button class="add-cover-btn" type="button">📷 Add cover photo</button>
+    <div class="cover-section" id="coverSection">
+        <input type="file" id="coverPhotoInput" name="cover_image" accept="image/*" hidden>
+        <div class="cover-actions">
+            <button class="add-cover-btn" type="button" id="addCoverBtn">📷 Add cover photo</button>
+            <button class="remove-cover-btn" type="button" id="removeCoverBtn" style="display:none;">Remove cover photo</button>
+        </div>
     </div>
 
     <div class="user-header-card">
@@ -173,6 +177,101 @@ document.querySelectorAll('.profile-tabs a').forEach(function(a) {
     });
 });
 
+var coverStorageKey = null;
+
+function updateCoverPreview(src) {
+    var coverSection = document.getElementById('coverSection');
+    var addBtn = document.getElementById('addCoverBtn');
+    var removeBtn = document.getElementById('removeCoverBtn');
+    if (!coverSection || !addBtn || !removeBtn) return;
+    if (src) {
+        coverSection.style.backgroundImage = 'url("' + src + '")';
+        coverSection.classList.add('has-cover');
+        addBtn.textContent = 'Change cover photo';
+        removeBtn.style.display = 'inline-flex';
+    } else {
+        coverSection.style.backgroundImage = '';
+        coverSection.classList.remove('has-cover');
+        addBtn.textContent = '📷 Add cover photo';
+        removeBtn.style.display = 'none';
+    }
+}
+
+function initCoverPhoto() {
+    var role = localStorage.getItem('role') || 'guide';
+    var userId = localStorage.getItem('userId') || '';
+    coverStorageKey = (role && userId) ? 'coverImage:' + role + ':' + userId : 'coverImage';
+    var input = document.getElementById('coverPhotoInput');
+    var addBtn = document.getElementById('addCoverBtn');
+    var removeBtn = document.getElementById('removeCoverBtn');
+
+    if (!input || !addBtn || !removeBtn) return;
+    var savedCover = localStorage.getItem(coverStorageKey);
+    if (savedCover) {
+        updateCoverPreview(savedCover);
+    }
+
+    addBtn.addEventListener('click', function() {
+        input.click();
+    });
+
+    input.addEventListener('change', function() {
+        if (!this.files || !this.files[0]) return;
+        var file = this.files[0];
+        if (file.size > 4 * 1024 * 1024) {
+            alert('Cover photo must be 4MB or smaller.');
+            return;
+        }
+        uploadCoverPhoto(file);
+    });
+
+    removeBtn.addEventListener('click', function() {
+        if (coverStorageKey) {
+            localStorage.removeItem(coverStorageKey);
+        }
+        updateCoverPreview(null);
+        input.value = '';
+    });
+}
+
+function uploadCoverPhoto(file) {
+    var userId = localStorage.getItem('userId');
+    if (!userId) {
+        alert('Missing user ID. Please refresh the page.');
+        return;
+    }
+    var formData = new FormData();
+    formData.append('user_id', userId);
+    formData.append('role', 'guide');
+    formData.append('cover_image', file);
+    fetch('update_cover_photo.php', {
+        method: 'POST',
+        credentials: 'same-origin',
+        body: formData
+    })
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        if (!data.ok) {
+            alert(data.error || 'Cover photo upload failed.');
+            return;
+        }
+        if (data.cover_image) {
+            updateCoverPreview(data.cover_image);
+            if (coverStorageKey) {
+                try { localStorage.setItem(coverStorageKey, data.cover_image); } catch (err) {}
+            }
+            alert('Cover photo updated successfully.');
+        }
+    })
+    .catch(function() {
+        alert('Unable to upload cover photo.');
+    });
+}
+
+initCoverPhoto();
+
 function loadGuideProfile() {
     var guideId = localStorage.getItem('guideId');
     var url = 'get_guide_profile.php';
@@ -191,6 +290,20 @@ function loadGuideProfile() {
             var handleEl = document.getElementById('profileHandle');
             if (nameEl) nameEl.textContent = [data.first_name, data.last_name].filter(Boolean).join(' ') || 'Tour Guide';
             if (handleEl) handleEl.textContent = '@' + (data.first_name || 'guide').toLowerCase().replace(/\s+/g, '');
+            var profilePic = document.getElementById('guideProfilePic');
+            var navPic = document.getElementById('guideNavProfilePic');
+            if (data.profile_image) {
+                if (profilePic) profilePic.src = data.profile_image;
+                if (navPic) navPic.src = data.profile_image;
+                try { localStorage.setItem('profileImage:guide:' + (localStorage.getItem('userId') || ''), data.profile_image); } catch (err) {}
+                try { localStorage.setItem('profileImage', data.profile_image); } catch (err) {}
+            }
+            if (data.cover_image) {
+                updateCoverPreview(data.cover_image);
+                if (coverStorageKey) {
+                    try { localStorage.setItem(coverStorageKey, data.cover_image); } catch (err) {}
+                }
+            }
             var avg = data.avg_rating != null ? data.avg_rating : 0;
             var count = data.review_count != null ? data.review_count : 0;
             var starsEl = document.getElementById('guideRatingStars');

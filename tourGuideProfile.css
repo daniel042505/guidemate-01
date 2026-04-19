@@ -16,6 +16,54 @@
 .guide-profile-page .cover-section {
     border-bottom-left-radius: 18px;
     border-bottom-right-radius: 18px;
+    min-height: 260px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, rgba(13, 148, 136, 0.95), rgba(16, 185, 129, 0.85));
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.guide-profile-page .cover-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.12));
+    pointer-events: none;
+}
+
+.guide-profile-page .cover-actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.guide-profile-page .cover-section.has-cover::after {
+    background: linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.28));
+}
+
+.guide-profile-page .add-cover-btn,
+.guide-profile-page .remove-cover-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 0.85rem 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    background: rgba(255,255,255,0.95);
+    color: #0f766e;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16);
+}
+
+.guide-profile-page .add-cover-btn:hover,
+.guide-profile-page .remove-cover-btn:hover {
+    transform: translateY(-1px);
 }
 
 /* Move header card slightly lower so avatar isn't visually clipped */

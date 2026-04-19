@@ -16,6 +16,7 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     <title>Cebu Admin Command | AdventureSync</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="adminDashboard.css">
 </head>
 <body>
@@ -23,7 +24,9 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     <nav class="glass-nav">
         <div class="logo">GuideMate Admin </div>
         <div class="nav-links">
-            <span class="active">REAL-TIME MAP</span>
+            <a href="#real-time-map" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link active">REAL-TIME MAP</a>
+            <a href="#fleet-status" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link">FLEET STATUS</a>
+            <a href="#revenue" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link">REVENUE</a>
             <a href="add_admin.php" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link">ADD ADMIN</a>
             <a href="add_spot.php" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link">ADD SPOT</a>
             <a href="logout.php" class="logout-link">LOGOUT</a>
@@ -35,6 +38,16 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         <p id="dashboardCurrentDate"><?= strtoupper(date('F j, Y')) ?></p>
         <h1>Admin Dashboard</h1>
     </header>
+
+    <section id="real-time-map" class="pending-guides-section">
+        <div class="panel pending-panel">
+            <div class="panel-head">
+                <h3>Real-time Map</h3>
+                <span class="pending-subtitle">Live tour and destination view for your admin dashboard.</span>
+            </div>
+            <div id="dashboardMap" class="dashboard-map"></div>
+        </div>
+    </section>
 
     <div class="stats-row" id="statsRow">
         <div class="stat-card">
@@ -50,6 +63,82 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             <div class="value" id="statTotalDestinations">—</div>
         </div>
     </div>
+
+    <!-- Fleet Status Section -->
+    <section id="fleet-status" class="pending-guides-section">
+        <h2 class="panel-section-title">Fleet Status</h2>
+        <div class="panel pending-panel">
+            <div class="panel-head">
+                <h3>Fleet Overview</h3>
+                <span class="pending-subtitle">Real-time status of all tour guides in the system.</span>
+            </div>
+            <div id="fleetContainer">
+                <p class="pending-loading" id="fleetLoading">Loading fleet status…</p>
+                <div id="fleetContent" style="display: none;">
+                    <!-- Fleet status content will be populated here -->
+                    <div class="fleet-stats">
+                        <div class="fleet-stat">
+                            <label>Total Guides</label>
+                            <div class="value" id="fleetTotalGuides">—</div>
+                        </div>
+                        <div class="fleet-stat">
+                            <label>Active Guides</label>
+                            <div class="value blue-glow" id="fleetActiveGuides">—</div>
+                        </div>
+                        <div class="fleet-stat">
+                            <label>Suspended Guides</label>
+                            <div class="value" id="fleetSuspendedGuides">—</div>
+                        </div>
+                    </div>
+                    <table class="pending-table" id="fleetTable">
+                        <thead>
+                            <tr>
+                                <th>Guide</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Last Activity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fleetBody"></tbody>
+                    </table>
+                </div>
+                <p class="pending-empty" id="fleetEmpty" style="display: none;">No guides in fleet.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Revenue Section -->
+    <section id="revenue" class="pending-guides-section">
+        <h2 class="panel-section-title">Revenue</h2>
+        <div class="panel pending-panel">
+            <div class="panel-head">
+                <h3>Revenue Overview</h3>
+                <span class="pending-subtitle">Financial performance and earnings from bookings.</span>
+            </div>
+            <div id="revenueContainer">
+                <p class="pending-loading" id="revenueLoading">Loading revenue data…</p>
+                <div id="revenueContent" style="display: none;">
+                    <!-- Revenue content -->
+                    <div class="revenue-stats">
+                        <div class="revenue-stat">
+                            <label>Total Bookings</label>
+                            <div class="value" id="revenueTotalBookings">—</div>
+                        </div>
+                        <div class="revenue-stat">
+                            <label>Total Revenue</label>
+                            <div class="value blue-glow" id="revenueTotal">—</div>
+                        </div>
+                        <div class="revenue-stat">
+                            <label>Average per Booking</label>
+                            <div class="value" id="revenueAverage">—</div>
+                        </div>
+                    </div>
+                    <p>Note: Revenue calculation based on completed bookings.</p>
+                </div>
+                <p class="pending-empty" id="revenueEmpty" style="display: none;">No revenue data available.</p>
+            </div>
+        </div>
+    </section>
 
     <!-- User management panel -->
     <section class="pending-guides-section">
@@ -538,6 +627,7 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     </div>
 
     <script src="logout_modal.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>feather.replace();</script>
     <script>
     (function() {
@@ -1895,6 +1985,106 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
                 .catch(function() {});
         }
 
+        function loadFleet() {
+            var loading = document.getElementById('fleetLoading');
+            var content = document.getElementById('fleetContent');
+            var table = document.getElementById('fleetTable');
+            var body = document.getElementById('fleetBody');
+            var empty = document.getElementById('fleetEmpty');
+            var totalGuides = document.getElementById('fleetTotalGuides');
+            var activeGuides = document.getElementById('fleetActiveGuides');
+            var suspendedGuides = document.getElementById('fleetSuspendedGuides');
+
+            if (loading) loading.style.display = 'block';
+            if (content) content.style.display = 'none';
+            if (empty) empty.style.display = 'none';
+
+            fetchWithTimeout('get_all_guides_admin.php', { credentials: 'same-origin' })
+                .then(function(r) {
+                    if (r.status === 403) return null;
+                    return r.json();
+                })
+                .then(function(guides) {
+                    if (!guides || !Array.isArray(guides)) return;
+                    if (loading) loading.style.display = 'none';
+                    if (content) content.style.display = 'block';
+
+                    var total = guides.length;
+                    var active = guides.filter(function(g) { return g.status === 'Active'; }).length;
+                    var suspended = guides.filter(function(g) { return g.status === 'Suspended'; }).length;
+
+                    if (totalGuides) totalGuides.textContent = total.toLocaleString();
+                    if (activeGuides) activeGuides.textContent = active.toLocaleString();
+                    if (suspendedGuides) suspendedGuides.textContent = suspended.toLocaleString();
+
+                    if (body) {
+                        body.innerHTML = '';
+                        guides.forEach(function(guide) {
+                            var tr = document.createElement('tr');
+                            tr.innerHTML = '<td>' + (guide.name || 'Unknown') + '</td>' +
+                                '<td>' + (guide.email || '') + '</td>' +
+                                '<td>' + (guide.status || 'Pending') + '</td>' +
+                                '<td>' + (guide.is_on_landing ? 'Active' : 'Inactive') + '</td>';
+                            body.appendChild(tr);
+                        });
+                    }
+                    if (table) table.style.display = 'table';
+                })
+                .catch(function() {
+                    if (loading) loading.style.display = 'none';
+                    if (empty) empty.style.display = 'block';
+                });
+        }
+
+        function loadRevenue() {
+            var loading = document.getElementById('revenueLoading');
+            var content = document.getElementById('revenueContent');
+            var empty = document.getElementById('revenueEmpty');
+            var totalBookings = document.getElementById('revenueTotalBookings');
+            var totalRevenue = document.getElementById('revenueTotal');
+            var averageRevenue = document.getElementById('revenueAverage');
+
+            if (loading) loading.style.display = 'block';
+            if (content) content.style.display = 'none';
+            if (empty) empty.style.display = 'none';
+
+            fetchWithTimeout('get_revenue_admin.php', { credentials: 'same-origin' })
+                .then(function(r) {
+                    if (r.status === 403) return null;
+                    return r.json();
+                })
+                .then(function(data) {
+                    if (!data) return;
+                    if (loading) loading.style.display = 'none';
+                    if (content) content.style.display = 'block';
+
+                    if (totalBookings) totalBookings.textContent = (data.total_bookings != null) ? Number(data.total_bookings).toLocaleString() : '—';
+                    if (totalRevenue) totalRevenue.textContent = data.total_revenue || '—';
+                    if (averageRevenue) averageRevenue.textContent = data.average_revenue || '—';
+                })
+                .catch(function() {
+                    if (loading) loading.style.display = 'none';
+                    if (empty) empty.style.display = 'block';
+                });
+        }
+
+        function initDashboardMap() {
+            var mapEl = document.getElementById('dashboardMap');
+            if (!mapEl || typeof L === 'undefined') return;
+            var map = L.map(mapEl, {
+                zoomControl: true,
+                attributionControl: false
+            }).setView([10.3157, 123.8854], 11);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            L.marker([10.3157, 123.8854]).addTo(map)
+                .bindPopup('GuideMate Admin map view – Cebu, Philippines.');
+        }
+
         function getSecurityBadgeClass(status) {
             switch (status) {
                 case 'Implemented':
@@ -2144,7 +2334,10 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
                 updateDashboardDate();
                 setInterval(updateDashboardDate, 60000);
                 bindReviewDashboardControls();
+                initDashboardMap();
                 loadAdminStats();
+                loadFleet();
+                loadRevenue();
                 loadAllGuides();
                 loadPending();
                 loadPendingBookings();
@@ -2163,7 +2356,10 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             updateDashboardDate();
             setInterval(updateDashboardDate, 60000);
             bindReviewDashboardControls();
+            initDashboardMap();
             loadAdminStats();
+            loadFleet();
+            loadRevenue();
             loadAllGuides();
             loadPending();
             loadPendingBookings();
