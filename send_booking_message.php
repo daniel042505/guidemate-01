@@ -19,6 +19,8 @@ if (!ensure_guide_bookings_table($mysqli) || !ensure_booking_messages_table($mys
 
 $bookingId = isset($_POST['booking_id']) ? (int) $_POST['booking_id'] : 0;
 $messageText = trim((string) ($_POST['message_text'] ?? ''));
+$meetTime = trim((string) ($_POST['meet_time'] ?? ''));
+$meetingLocation = trim((string) ($_POST['meeting_location'] ?? ''));
 
 if ($bookingId <= 0) {
     http_response_code(422);
@@ -26,9 +28,9 @@ if ($bookingId <= 0) {
     exit;
 }
 
-if ($messageText === '') {
+if ($messageText === '' && $meetTime === '' && $meetingLocation === '') {
     http_response_code(422);
-    echo json_encode(['ok' => false, 'error' => 'Message cannot be empty.']);
+    echo json_encode(['ok' => false, 'error' => 'Message cannot be empty unless you are updating booking details.']);
     exit;
 }
 
@@ -80,6 +82,31 @@ if ($role === 'guide') {
         http_response_code(404);
         echo json_encode(['ok' => false, 'error' => 'You can only message tourists assigned to your bookings.']);
         exit;
+    }
+
+    if ($meetTime !== '' || $meetingLocation !== '') {
+        if ($meetTime !== '' && $meetingLocation !== '') {
+            $stmtUpdate = $mysqli->prepare('UPDATE guide_bookings SET meet_time = ?, meeting_location = ? WHERE booking_id = ?');
+            if ($stmtUpdate) {
+                $stmtUpdate->bind_param('ssi', $meetTime, $meetingLocation, $bookingId);
+                $stmtUpdate->execute();
+                $stmtUpdate->close();
+            }
+        } elseif ($meetTime !== '') {
+            $stmtUpdate = $mysqli->prepare('UPDATE guide_bookings SET meet_time = ? WHERE booking_id = ?');
+            if ($stmtUpdate) {
+                $stmtUpdate->bind_param('si', $meetTime, $bookingId);
+                $stmtUpdate->execute();
+                $stmtUpdate->close();
+            }
+        } elseif ($meetingLocation !== '') {
+            $stmtUpdate = $mysqli->prepare('UPDATE guide_bookings SET meeting_location = ? WHERE booking_id = ?');
+            if ($stmtUpdate) {
+                $stmtUpdate->bind_param('si', $meetingLocation, $bookingId);
+                $stmtUpdate->execute();
+                $stmtUpdate->close();
+            }
+        }
     }
 } elseif ($role === 'tourist') {
     $bookingStmt = $mysqli->prepare("SELECT

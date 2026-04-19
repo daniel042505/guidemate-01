@@ -284,7 +284,6 @@
         <p id="bookingHeroText">When you accept a tourist booking request, the tourist name will appear here.</p>
         <p id="bookingHeroMeta" style="font-weight: 600; color: rgba(255,255,255,0.92); margin-top: 10px;"></p>
         <div id="bookingHeroActions" style="display: none; gap: 12px; flex-wrap: wrap;">
-            <button class="btn btn-primary" style="background: white; color: var(--accent);">ACTIVATE GPS</button>
             <button id="heroMessageTouristBtn" class="btn btn-primary" style="background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.5); backdrop-filter: blur(5px);">MESSAGE TOURIST</button>
         </div>
     </section>
@@ -396,11 +395,25 @@
         <div class="message-thread" id="guideMessageThread">
             <div class="message-empty">Select a booked tourist to start messaging.</div>
         </div>
-        <div class="message-composer">
-            <textarea id="bookingMessageInput" maxlength="1000" placeholder="Type a message for your tourist..."></textarea>
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 12px;">
+        <div class="message-composer" style="display:flex; flex-direction:column; gap:12px; padding:12px; border-top:1px solid #e2e8f0;">
+            <div class="booking-confirmation-fields" style="display:grid; gap:10px;">
+                <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                    <label style="flex:1; min-width:200px; display:flex; flex-direction:column; gap:6px; font-size:0.9rem; color:#334155;">
+                        Confirm date/time
+                        <input id="bookingConfirmDateTime" type="datetime-local" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:#111;" />
+                    </label>
+                    <label style="flex:1; min-width:220px; display:flex; flex-direction:column; gap:6px; font-size:0.9rem; color:#334155;">
+                        Location
+                        <select id="bookingConfirmLocation" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:#111;">
+                            <option value="">Choose a location</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <textarea id="bookingMessageInput" maxlength="1000" placeholder="Type a message for your tourist..." style="min-height:100px; padding:12px; border:1px solid #cbd5e1; border-radius:10px; font-family:inherit; font-size:0.95rem; resize:vertical;"></textarea>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
                 <span id="bookingMessageStatus" class="message-status" aria-live="polite"></span>
-                <button type="button" class="btn btn-primary" id="sendBookingMessageBtn">Send message</button>
+                <button type="button" class="btn btn-primary" id="sendBookingMessageBtn" style="padding:10px 24px; font-weight:600;">Send message</button>
             </div>
         </div>
     </div>
@@ -430,6 +443,9 @@
         window.addEventListener('click', function() { menu.classList.remove('show'); });
     }
 })();
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>

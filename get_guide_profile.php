@@ -20,6 +20,12 @@ if ($colCover && $colCover->num_rows > 0) {
     $has_cover_image = true;
 }
 
+$has_cover_image_updated_at = false;
+$colCoverUpdated = $mysqli->query("SHOW COLUMNS FROM tour_guides LIKE 'cover_image_updated_at'");
+if ($colCoverUpdated && $colCoverUpdated->num_rows > 0) {
+    $has_cover_image_updated_at = true;
+}
+
 $guide_id = isset($_GET['guide_id']) ? (int)$_GET['guide_id'] : (isset($_POST['guide_id']) ? (int)$_POST['guide_id'] : 0);
 
 $user_id = null;
@@ -31,12 +37,14 @@ if ($user_id) {
     $select = "guide_id, first_name, last_name, experience_years, service_areas, specialization, profile_image";
     if ($has_profile_image_updated_at) $select .= ", profile_image_updated_at";
     if ($has_cover_image) $select .= ", cover_image";
+    if ($has_cover_image_updated_at) $select .= ", cover_image_updated_at";
     $stmt = $mysqli->prepare("SELECT $select FROM tour_guides WHERE user_id = ?");
     $stmt->bind_param('i', $user_id);
 } elseif ($guide_id > 0) {
     $select = "guide_id, first_name, last_name, experience_years, service_areas, specialization, profile_image";
     if ($has_profile_image_updated_at) $select .= ", profile_image_updated_at";
     if ($has_cover_image) $select .= ", cover_image";
+    if ($has_cover_image_updated_at) $select .= ", cover_image_updated_at";
     $stmt = $mysqli->prepare("SELECT $select FROM tour_guides WHERE guide_id = ?");
     $stmt->bind_param('i', $guide_id);
 } else {
@@ -76,5 +84,6 @@ echo json_encode([
     'review_count' => $review_count,
     'profile_image' => $row['profile_image'] ?? null,
     'cover_image' => $has_cover_image ? ($row['cover_image'] ?? null) : null,
+    'cover_image_updated_at' => $has_cover_image_updated_at ? ($row['cover_image_updated_at'] ?? null) : null,
     'profile_image_updated_at' => $has_profile_image_updated_at ? ($row['profile_image_updated_at'] ?? null) : null,
 ]);

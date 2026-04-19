@@ -45,6 +45,11 @@ if (!$col || $col->num_rows === 0) {
     $mysqli->query("ALTER TABLE tour_guides ADD COLUMN cover_image VARCHAR(255) DEFAULT NULL");
 }
 
+$colUpdated = $mysqli->query("SHOW COLUMNS FROM tour_guides LIKE 'cover_image_updated_at'");
+if (!$colUpdated || $colUpdated->num_rows === 0) {
+    $mysqli->query("ALTER TABLE tour_guides ADD COLUMN cover_image_updated_at DATE DEFAULT NULL");
+}
+
 $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
 $filename = 'cover_' . $user_id . '_' . time() . '.' . $ext;
 $upload_dir = __DIR__ . '/photos/';
@@ -60,7 +65,7 @@ if (!move_uploaded_file($file['tmp_name'], $upload_path)) {
     exit;
 }
 
-$stmt = $mysqli->prepare('UPDATE tour_guides SET cover_image = ? WHERE user_id = ?');
+$stmt = $mysqli->prepare('UPDATE tour_guides SET cover_image = ?, cover_image_updated_at = CURDATE() WHERE user_id = ?');
 $stmt->bind_param('si', $db_path, $user_id);
 if (!$stmt->execute()) {
     http_response_code(500);
@@ -68,4 +73,4 @@ if (!$stmt->execute()) {
     exit;
 }
 
-echo json_encode(['ok' => true, 'cover_image' => $db_path]);
+echo json_encode(['ok' => true, 'cover_image' => $db_path, 'cover_image_updated_at' => date('Y-m-d')]);

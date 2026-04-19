@@ -2,6 +2,7 @@ feather.replace();
 
     var activeBookingConversation = null;
     var guideMessageRefreshTimer = null;
+    var bookingLocations = [];
 
     function escapeHtml(value) {
         return String(value == null ? '' : value)
@@ -24,6 +25,90 @@ feather.replace();
             hour: 'numeric',
             minute: '2-digit'
         });
+    }
+
+    function formatBookingDateTimeForInsert(value) {
+        if (!value) return '';
+        var date = new Date(value);
+        if (isNaN(date.getTime())) return value;
+        return date.toLocaleString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+    }
+
+    function loadBookingLocations() {
+        fetch('get_spots.php', { credentials: 'same-origin' })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                if (!Array.isArray(data)) {
+                    return;
+                }
+                bookingLocations = data.map(function(location) {
+                    return {
+                        id: location.destinationId,
+                        name: String(location.name || '').trim(),
+                        address: String(location.address || '').trim()
+                    };
+                }).filter(function(location) {
+                    return location.name !== '';
+                });
+                populateBookingLocationOptions();
+            })
+            .catch(function() {
+                bookingLocations = [];
+                populateBookingLocationOptions();
+            });
+    }
+
+    function populateBookingLocationOptions() {
+        var select = document.getElementById('bookingConfirmLocation');
+        if (!select) return;
+        var selected = select.value || '';
+        select.innerHTML = '<option value="">Choose a location</option>';
+        bookingLocations.forEach(function(location) {
+            var label = location.address ? (location.name + ' — ' + location.address) : location.name;
+            var option = document.createElement('option');
+            option.value = location.name;
+            option.textContent = label;
+            select.appendChild(option);
+        });
+        if (selected) {
+            select.value = selected;
+        }
+    }
+
+    function insertBookingConfirmationDetails() {
+        var input = document.getElementById('bookingMessageInput');
+        var dateInput = document.getElementById('bookingConfirmDateTime');
+        var locationSelect = document.getElementById('bookingConfirmLocation');
+        var gpsLocation = document.getElementById('bookingGpsLocation');
+        if (!input) return;
+
+        var parts = [];
+        if (dateInput && dateInput.value) {
+            parts.push('Meeting time: ' + formatBookingDateTimeForInsert(dateInput.value));
+        }
+        if (locationSelect && locationSelect.value) {
+            parts.push('Location: ' + locationSelect.value);
+        } else if (gpsLocation && gpsLocation.value) {
+            parts.push('Meeting location: ' + gpsLocation.value);
+        }
+        if (parts.length === 0) {
+            setGuideMessageStatus('Choose a date/time or location before inserting details.', 'error');
+            return;
+        }
+
+        var note = parts.join(' | ');
+        if (input.value.trim()) {
+            input.value = input.value.trim() + '\n\n' + note;
+        } else {
+            input.value = note;
+        }
+        setGuideMessageStatus('Confirmation details inserted into the message.', 'success');
     }
 
     function getGuideMessageElements() {
@@ -134,6 +219,7 @@ feather.replace();
         }
         els.modal.hidden = false;
         setGuideMessageStatus('', '');
+        loadBookingLocations();
         loadGuideMessages(activeBookingConversation.booking_id);
     }
 
@@ -143,6 +229,10 @@ feather.replace();
         els.modal.hidden = true;
         stopGuideMessageRefresh();
         if (els.input) els.input.value = '';
+        var dateInput = document.getElementById('bookingConfirmDateTime');
+        if (dateInput) dateInput.value = '';
+        var locationSelect = document.getElementById('bookingConfirmLocation');
+        if (locationSelect) locationSelect.value = '';
         setGuideMessageStatus('', '');
     }
 
@@ -192,14 +282,25 @@ feather.replace();
         }
 
         var message = (els.input.value || '').trim();
-        if (!message) {
-            setGuideMessageStatus('Enter a message first.', 'error');
+        var dateInput = document.getElementById('bookingConfirmDateTime');
+        var locationSelect = document.getElementById('bookingConfirmLocation');
+        var dateValue = dateInput ? dateInput.value : '';
+        var locationValue = locationSelect ? locationSelect.value : '';
+
+        if (!message && !dateValue && !locationValue) {
+            setGuideMessageStatus('Enter a message or choose a date/time or location.', 'error');
             return;
         }
 
         var form = new FormData();
         form.append('booking_id', String(activeBookingConversation.booking_id));
         form.append('message_text', message);
+        if (dateValue) {
+            form.append('meet_time', dateValue);
+        }
+        if (locationValue) {
+            form.append('meeting_location', locationValue);
+        }
 
         els.sendBtn.disabled = true;
         els.sendBtn.textContent = 'Sending...';
@@ -217,11 +318,18 @@ feather.replace();
                     throw new Error(data.error || 'Could not send message.');
                 }
                 if (els.input) els.input.value = '';
+                var dateInput = document.getElementById('bookingConfirmDateTime');
+                if (dateInput) dateInput.value = '';
+                var locationSelect = document.getElementById('bookingConfirmLocation');
+                if (locationSelect) locationSelect.value = '';
                 setGuideMessageStatus(data.message || 'Message sent.', 'success');
                 loadGuideMessages(activeBookingConversation.booking_id, {
                     silent: true,
                     keepStatus: true
                 });
+                if (typeof loadApprovedBooking === 'function') {
+                    loadApprovedBooking();
+                }
             })
             .catch(function(err) {
                 setGuideMessageStatus((err && err.message) || 'Could not send message.', 'error');
@@ -519,14 +627,11 @@ function loadApprovedBooking() {
 
     function setTaskCardBooked(data) {
         var touristName = data.tourist_name || 'Tourist';
-        var meetTimeText = formatBookingDateTime(data.meet_time);
-        var approvedText = formatBookingDateTime(data.approved_at || data.created_at);
-        var locationText = data.meeting_location ? ('Location: ' + data.meeting_location) : '';
-        if (taskTimeEl) taskTimeEl.textContent = data.meet_time ? formatBookingTime(data.meet_time) : '--:--';
+        if (taskTimeEl) taskTimeEl.textContent = '--:--';
         if (taskStatusEl) taskStatusEl.textContent = 'BOOKED';
         if (taskTitleEl) taskTitleEl.textContent = touristName;
         if (taskPrimaryLineEl) taskPrimaryLineEl.innerHTML = '<i data-feather="users" style="width: 16px;"></i> Tourist assigned to this guide.';
-        if (taskSecondaryLineEl) taskSecondaryLineEl.innerHTML = '<i data-feather="calendar" style="width: 16px;"></i> ' + (meetTimeText ? ('Meet on ' + meetTimeText) : (approvedText ? ('Booking accepted on ' + approvedText + '. Message the tourist to confirm the meeting time and place.') : 'Booking accepted. Message the tourist to confirm the meeting time and place.')) + (locationText ? ('<br><span style="display:inline-block; margin-top:4px;">' + escapeHtml(locationText) + '</span>') : '');
+        if (taskSecondaryLineEl) taskSecondaryLineEl.innerHTML = '<i data-feather="calendar" style="width: 16px;"></i> Use the message chat to confirm the meeting time and location.';
         activeBookingConversation = {
             booking_id: data.booking_id,
             tourist_name: touristName,
@@ -539,16 +644,9 @@ function loadApprovedBooking() {
 
     function setScheduleCardBooked(data) {
         var touristName = data.tourist_name || 'Tourist';
-        var meetTimeText = formatBookingDateTime(data.meet_time);
-        var approvedText = formatBookingDateTime(data.approved_at || data.created_at);
-        var locationText = data.meeting_location ? (' Meeting point: ' + data.meeting_location + '.') : '';
         if (scheduleCardTitleEl) scheduleCardTitleEl.textContent = 'Booked Tourist';
         if (scheduleCardTextEl) {
-            scheduleCardTextEl.textContent = meetTimeText
-                ? (touristName + ' is currently assigned to you. Meet the tourist on ' + meetTimeText + '.' + locationText)
-                : approvedText
-                ? (touristName + ' is currently assigned to you. Booking approved on ' + approvedText + '. Send a message to confirm the meeting time and place.' + locationText)
-                : (touristName + ' is currently assigned to you. Booking accepted by you. Send a message to confirm the meeting time and place.');
+            scheduleCardTextEl.textContent = touristName + ' is currently assigned to you. Message the tourist to coordinate and confirm meeting details.';
         }
         if (scheduleCardButtonEl) scheduleCardButtonEl.textContent = 'CURRENT BOOKING';
     }
@@ -574,13 +672,9 @@ function loadApprovedBooking() {
 
             if (labelEl) labelEl.textContent = 'Approved Booking';
             if (titleEl) titleEl.textContent = 'Booked by ' + (data.tourist_name || 'Tourist');
-            if (textEl) textEl.textContent = data.meet_time
-                ? ('A tourist booking has been approved for you. Meet your tourist on ' + formatBookingDateTime(data.meet_time) + '.' + (data.meeting_location ? (' Meeting point: ' + data.meeting_location + '.') : ''))
-                : 'A tourist booking has been approved for you. Coordinate with the assigned tourist and prepare for the trip.';
+            if (textEl) textEl.textContent = 'A tourist booking has been approved for you. Coordinate with the assigned tourist and prepare for the trip. Use the message chat to confirm meeting time and location.';
             if (metaEl) {
-                metaEl.textContent = data.meet_time
-                    ? ('Meet time: ' + formatBookingDateTime(data.meet_time))
-                    : data.approved_at
+                metaEl.textContent = data.approved_at
                     ? ('Accepted on ' + data.approved_at)
                     : 'Booking accepted by guide.';
             }
@@ -599,6 +693,39 @@ function loadApprovedBooking() {
             setScheduleCardEmpty();
         });
 }
+
+    function activateGuideGps() {
+        var btn = document.getElementById('heroActivateGpsBtn');
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported by your browser.');
+            return;
+        }
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Activating...';
+        }
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            var lat = pos.coords.latitude;
+            var lng = pos.coords.longitude;
+            
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'ACTIVATE GPS';
+            }
+            
+            alert('GPS activated. Current location: ' + lat.toFixed(5) + ', ' + lng.toFixed(5));
+        }, function() {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'ACTIVATE GPS';
+            }
+            alert('Unable to activate GPS. Please enable location services and try again.');
+        }, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        });
+    }
 
     function saveGuideProfile() {
         var yearsEl = document.getElementById('experienceYears');
@@ -645,6 +772,7 @@ function loadApprovedBooking() {
         loadTouristReviews();
         loadPendingGuideBookings();
         loadApprovedBooking();
+        loadBookingLocations();
         var heroMessageBtn = document.getElementById('heroMessageTouristBtn');
         var taskMessageBtn = document.getElementById('bookingMessageBtn');
         var bookingCheckInBtn = document.getElementById('bookingCheckInBtn');
