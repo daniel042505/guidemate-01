@@ -95,6 +95,37 @@ feather.replace();
         if (taskBtn) taskBtn.disabled = !enabled;
     }
 
+    function getGuideTaskActionElements() {
+        return {
+            checkInBtn: document.getElementById('bookingCheckInBtn'),
+            emergencyBtn: document.getElementById('guideEmergencyCallBtn')
+        };
+    }
+
+    function updateGuideTaskActionButtons(enabled) {
+        var els = getGuideTaskActionElements();
+        if (els.checkInBtn) els.checkInBtn.disabled = !enabled;
+        if (els.emergencyBtn) els.emergencyBtn.disabled = false;
+    }
+
+    function handleGuideCheckIn() {
+        if (!activeBookingConversation || !activeBookingConversation.booking_id) {
+            alert('No active booking available to check in. Accept a tourist request first.');
+            return;
+        }
+        var touristName = activeBookingConversation.tourist_name || 'tourist';
+        if (confirm('Confirm check-in for ' + touristName + '?')) {
+            alert('Checked in successfully with ' + touristName + '. Please confirm arrival with the tourist.');
+        }
+    }
+
+    function initiateEmergencyCall() {
+        var emergencyNumber = '+63 908 123 4567';
+        if (confirm('Initiate emergency call to Tourism Admin at ' + emergencyNumber + '?')) {
+            window.location.href = 'tel:' + emergencyNumber;
+        }
+    }
+
     function openGuideMessageModal() {
         var els = getGuideMessageElements();
         if (!els.modal || !activeBookingConversation || !activeBookingConversation.booking_id) {
@@ -476,6 +507,7 @@ function loadApprovedBooking() {
         if (taskSecondaryLineEl) taskSecondaryLineEl.innerHTML = '<i data-feather="calendar" style="width: 16px;"></i> Approved booking details will appear here.';
         activeBookingConversation = null;
         updateGuideMessageButtons(false);
+        updateGuideTaskActionButtons(false);
         feather.replace();
     }
 
@@ -501,6 +533,7 @@ function loadApprovedBooking() {
             status: data.status || 'Approved'
         };
         updateGuideMessageButtons(!!data.booking_id);
+        updateGuideTaskActionButtons(!!data.booking_id);
         feather.replace();
     }
 
@@ -614,6 +647,8 @@ function loadApprovedBooking() {
         loadApprovedBooking();
         var heroMessageBtn = document.getElementById('heroMessageTouristBtn');
         var taskMessageBtn = document.getElementById('bookingMessageBtn');
+        var bookingCheckInBtn = document.getElementById('bookingCheckInBtn');
+        var emergencyCallBtn = document.getElementById('guideEmergencyCallBtn');
         var modalCloseBtn = document.getElementById('guideMessageModalClose');
         var modal = document.getElementById('guideMessageModal');
         var sendMessageBtn = document.getElementById('sendBookingMessageBtn');
@@ -621,6 +656,8 @@ function loadApprovedBooking() {
         if (saveBtn) saveBtn.addEventListener('click', saveGuideProfile);
         if (heroMessageBtn) heroMessageBtn.addEventListener('click', openGuideMessageModal);
         if (taskMessageBtn) taskMessageBtn.addEventListener('click', openGuideMessageModal);
+        if (bookingCheckInBtn) bookingCheckInBtn.addEventListener('click', handleGuideCheckIn);
+        if (emergencyCallBtn) emergencyCallBtn.addEventListener('click', initiateEmergencyCall);
         if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeGuideMessageModal);
         if (sendMessageBtn) sendMessageBtn.addEventListener('click', sendGuideMessage);
         if (modal) {

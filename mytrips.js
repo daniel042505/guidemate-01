@@ -275,6 +275,29 @@
         }
     }
 
+    function shouldOpenMessagesOnLoad() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('openMessages') === '1' || params.get('openMessages') === 'true';
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function openMessagesAfterLoad() {
+        if (!shouldOpenMessagesOnLoad() || !Array.isArray(tripsData) || tripsData.length === 0) {
+            return;
+        }
+
+        const trip = tripsData.find(function(item) {
+            return item.canViewMessages;
+        });
+
+        if (trip) {
+            loadTripMessages(trip);
+        }
+    }
+
     function stopTripMessageRefresh() {
         if (tripMessageRefreshTimer) {
             window.clearInterval(tripMessageRefreshTimer);
@@ -447,6 +470,7 @@
             notifyApprovedBooking(bookings);
             tripsData = normalizeTrips(bookings);
             renderTrips();
+            openMessagesAfterLoad();
         } catch (_) {
             renderEmptyState('Could not load your guide bookings right now.');
         }

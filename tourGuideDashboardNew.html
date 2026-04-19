@@ -261,8 +261,6 @@
     <nav>
         <a href="tourGuideDashboardNew.html" style="color: var(--accent);">DASHBOARD</a>
         <a href="tourGuideProfile.html">PROFILE</a>
-        <a href="#">MY TOURS</a>
-        <a href="#">GUESTS</a>
     </nav>
     <div class="nav-right">
         <div class="profile-container">
@@ -371,7 +369,7 @@
                 <p id="bookingTaskPrimaryLine" style="margin: 5px 0;"><i data-feather="users" style="width: 16px;"></i> Waiting for a tourist booking.</p>
                 <p id="bookingTaskSecondaryLine" style="margin: 5px 0;"><i data-feather="calendar" style="width: 16px;"></i> Accepted booking details will appear here.</p>
                 <div style="display: flex; gap: 12px; margin-top: 20px;">
-                    <button class="btn btn-primary" style="flex: 1;">Check-in</button>
+                    <button id="bookingCheckInBtn" class="btn btn-primary" style="flex: 1;" disabled>Check-in</button>
                     <button id="bookingMessageBtn" class="btn btn-outline" style="flex: 1;" disabled>Contact</button>
                 </div>
             </div>
@@ -380,7 +378,7 @@
                 <div class="icon-box" style="margin: 0 0 15px 0; background: #fff5f5; color: #e74c3c;"><i data-feather="shield"></i></div>
                 <h3 style="margin: 0 0 10px 0;">SOS / Support</h3>
                 <p>Direct priority line to Tourism Admin for Badian district.</p>
-                <button class="btn btn-danger" style="width: 100%;">INITIATE EMERGENCY CALL</button>
+                <button id="guideEmergencyCallBtn" class="btn btn-danger" style="width: 100%;">INITIATE EMERGENCY CALL</button>
             </div>
         </div>
     </section>

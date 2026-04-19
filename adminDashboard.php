@@ -24,8 +24,6 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
         <div class="logo">GuideMate Admin </div>
         <div class="nav-links">
             <span class="active">REAL-TIME MAP</span>
-            <span>FLEET STATUS</span>
-            <span>REVENUE</span>
             <a href="add_admin.php" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link">ADD ADMIN</a>
             <a href="add_spot.php" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link">ADD SPOT</a>
             <a href="logout.php" class="logout-link">LOGOUT</a>

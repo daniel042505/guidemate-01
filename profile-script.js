@@ -350,6 +350,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    function activateHashTab() {
+        if (window.location.hash === '#reviews') {
+            const reviewTab = Array.from(profileTabs).find((tab) => tab.textContent.trim() === 'Reviews');
+            if (reviewTab) {
+                reviewTab.click();
+            }
+        }
+    }
+
+    activateHashTab();
+
     // 3. Logout (Sign out)
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
