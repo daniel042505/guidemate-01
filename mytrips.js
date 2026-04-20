@@ -333,11 +333,28 @@
         tripMessagesThread.innerHTML = messages.map(function(message) {
             const senderRole = message.sender_role === 'tourist' ? 'tourist' : 'guide';
             const senderLabel = senderRole === 'guide' ? (guideName || 'Guide') : 'You';
+            let messageContent = `<strong>${escapeHtml(senderLabel)}</strong>`;
+            
+            if (message.message_text) {
+                messageContent += `<p>${escapeHtml(message.message_text)}</p>`;
+            }
+            
+            if (message.meet_time || message.meeting_location) {
+                messageContent += '<div style="background-color: rgba(0,0,0,0.05); padding: 8px; border-radius: 4px; margin: 8px 0; font-size: 0.9em;">';
+                if (message.meet_time) {
+                    messageContent += '<div>📅 <strong>Confirm date/time:</strong> ' + escapeHtml(formatMessageDateTime(message.meet_time)) + '</div>';
+                }
+                if (message.meeting_location) {
+                    messageContent += '<div>📍 <strong>Location:</strong> ' + escapeHtml(message.meeting_location) + '</div>';
+                }
+                messageContent += '</div>';
+            }
+            
+            messageContent += `<small>${escapeHtml(formatMessageDateTime(message.created_at))}</small>`;
+            
             return `
                 <div class="trip-message-bubble ${senderRole}">
-                    <strong>${escapeHtml(senderLabel)}</strong>
-                    <p>${escapeHtml(message.message_text || '')}</p>
-                    <small>${escapeHtml(formatMessageDateTime(message.created_at))}</small>
+                    ${messageContent}
                 </div>
             `;
         }).join('');
@@ -511,6 +528,13 @@
         if (addNewTripBtn) {
             addNewTripBtn.addEventListener('click', function() {
                 window.location.href = 'landingpage.html';
+            });
+        }
+
+        var contactAdminBtn = document.getElementById('contactAdminBtn');
+        if (contactAdminBtn) {
+            contactAdminBtn.addEventListener('click', function() {
+                window.location.href = 'adminSupport.html';
             });
         }
 

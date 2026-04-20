@@ -28,6 +28,11 @@ $colImg = $mysqli->query("SHOW COLUMNS FROM destinations LIKE 'image'");
 if ($colImg && $colImg->num_rows > 0) $select .= ", image";
 $colRat = $mysqli->query("SHOW COLUMNS FROM destinations LIKE 'rating'");
 if ($colRat && $colRat->num_rows > 0) $select .= ", rating, review_count";
+$colLat = $mysqli->query("SHOW COLUMNS FROM destinations LIKE 'latitude'");
+$hasLatitude = $colLat && $colLat->num_rows > 0;
+$colLong = $mysqli->query("SHOW COLUMNS FROM destinations LIKE 'longitude'");
+$hasLongitude = $colLong && $colLong->num_rows > 0;
+if ($hasLatitude && $hasLongitude) $select .= ", latitude, longitude";
 if ($hasPrice) $select .= ", price";
 if ($hasAvailability) $select .= ", is_available";
 
@@ -38,13 +43,18 @@ $result = $mysqli->query($query);
 $spots = [];
 if ($result) {
     while ($row = $result->fetch_assoc()) {
-        $spots[] = [
+        $spot = [
             'destination_id' => (int) $row['destination_id'],
             'name' => $row['name'],
             'description' => $row['description'] ?: '',
             'price' => ($hasPrice && isset($row['price']) && $row['price'] !== null && $row['price'] !== '') ? $row['price'] : '',
             'is_available' => ($hasAvailability && isset($row['is_available'])) ? (int) $row['is_available'] : 1,
         ];
+        if ($hasLatitude && $hasLongitude) {
+            $spot['latitude'] = isset($row['latitude']) && $row['latitude'] !== null && $row['latitude'] !== '' ? (float)$row['latitude'] : null;
+            $spot['longitude'] = isset($row['longitude']) && $row['longitude'] !== null && $row['longitude'] !== '' ? (float)$row['longitude'] : null;
+        }
+        $spots[] = $spot;
     }
 }
 

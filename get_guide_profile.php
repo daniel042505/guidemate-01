@@ -26,6 +26,12 @@ if ($colCoverUpdated && $colCoverUpdated->num_rows > 0) {
     $has_cover_image_updated_at = true;
 }
 
+$has_suspended_until = false;
+$colSuspended = $mysqli->query("SHOW COLUMNS FROM tour_guides LIKE 'suspended_until'");
+if ($colSuspended && $colSuspended->num_rows > 0) {
+    $has_suspended_until = true;
+}
+
 $guide_id = isset($_GET['guide_id']) ? (int)$_GET['guide_id'] : (isset($_POST['guide_id']) ? (int)$_POST['guide_id'] : 0);
 
 $user_id = null;
@@ -38,6 +44,7 @@ if ($user_id) {
     if ($has_profile_image_updated_at) $select .= ", profile_image_updated_at";
     if ($has_cover_image) $select .= ", cover_image";
     if ($has_cover_image_updated_at) $select .= ", cover_image_updated_at";
+    if ($has_suspended_until) $select .= ", suspended_until";
     $stmt = $mysqli->prepare("SELECT $select FROM tour_guides WHERE user_id = ?");
     $stmt->bind_param('i', $user_id);
 } elseif ($guide_id > 0) {
@@ -62,6 +69,8 @@ if (!$result || $result->num_rows === 0) {
 
 $row = $result->fetch_assoc();
 $gid = (int)$row['guide_id'];
+$suspendedUntil = ($has_suspended_until && !empty($row['suspended_until'])) ? $row['suspended_until'] : null;
+$isSuspended = $suspendedUntil && $suspendedUntil > date('Y-m-d');
 $stmt->close();
 
 // Average rating and review count from active reviews only.
@@ -86,4 +95,6 @@ echo json_encode([
     'cover_image' => $has_cover_image ? ($row['cover_image'] ?? null) : null,
     'cover_image_updated_at' => $has_cover_image_updated_at ? ($row['cover_image_updated_at'] ?? null) : null,
     'profile_image_updated_at' => $has_profile_image_updated_at ? ($row['profile_image_updated_at'] ?? null) : null,
+    'suspended_until' => $suspendedUntil,
+    'is_suspended' => $isSuspended,
 ]);

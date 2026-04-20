@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Support Chat · GuideMate</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #25303b;
+        }
+        .page-shell {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 320px;
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+        .sidebar h1 {
+            margin: 0 0 24px;
+            font-size: 1.15rem;
+        }
+        .sidebar .info {
+            margin-bottom: 24px;
+            color: #55606f;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .conversation-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .conversation-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            background: #f9fafb;
+        }
+        .conversation-item.active {
+            background: #eef6ff;
+            border-color: #90b7ff;
+        }
+        .conversation-item strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.98rem;
+        }
+        .conversation-item small {
+            color: #657287;
+        }
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .thread {
+            flex: 1;
+            min-height: 0;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 18px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        .message-row {
+            margin-bottom: 16px;
+            max-width: 80%;
+        }
+        .message-row.admin {
+            margin-left: auto;
+            text-align: right;
+        }
+        .message-bubble {
+            display: inline-block;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: #eff8ff;
+            border: 1px solid #d2e9ff;
+            color: #1a3e6f;
+            line-height: 1.45;
+        }
+        .message-row.admin .message-bubble {
+            background: #1a64c5;
+            color: #fff;
+            border-color: #1851a8;
+        }
+        .message-meta {
+            margin-top: 6px;
+            color: #64748b;
+            font-size: 0.82rem;
+        }
+        .composer {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .composer textarea {
+            width: 100%;
+            min-height: 110px;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            resize: vertical;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+        .composer button {
+            align-self: flex-end;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 999px;
+            background: #1d4ed8;
+            color: #fff;
+            cursor: pointer;
+        }
+        .composer button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .status {
+            color: #2563eb;
+            font-size: 0.92rem;
+            min-height: 1.2rem;
+        }
+        .welcome {
+            color: #475569;
+            margin-top: 8px;
+        }
+        .guide-note {
+            margin-top: 14px;
+            color: #334155;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+        .empty-thread {
+            color: #64748b;
+            text-align: center;
+            margin-top: 40px;
+        }
+        @media (max-width: 900px) {
+            .page-shell { flex-direction: column; }
+            .sidebar { width: 100%; order: 2; }
+            .main { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <aside class="sidebar">
+            <h1>Admin Support</h1>
+            <p class="info">Use this chat to contact GuideMate admin directly. Guides and tourists can open one support thread; admins can view user conversations.</p>
+            <div id="adminConversationsSection" hidden>
+                <h2 style="font-size:1rem; margin:0 0 12px;">Conversations</h2>
+                <ul class="conversation-list" id="adminConversationList"></ul>
+            </div>
+            <div class="guide-note" id="guideNote" hidden>
+                Only admins can see all conversations here. Guides and tourists will see their own support thread.
+            </div>
+        </aside>
+        <main class="main">
+            <div class="header">
+                <div>
+                    <h2 id="chatTitle">Support Chat</h2>
+                    <p class="welcome" id="chatSubtitle">Loading your support conversation…</p>
+                </div>
+            </div>
+            <div class="thread" id="adminChatThread">
+                <div class="empty-thread">Loading messages…</div>
+            </div>
+            <div class="composer">
+                <div class="status" id="adminChatStatus"></div>
+                <textarea id="adminChatInput" placeholder="Type your message to admin..." maxlength="1000"></textarea>
+                <button id="adminChatSendBtn">Send message</button>
+            </div>
+        </main>
+    </div>
+    <script src="adminSupport.js"></script>
+</body>
+</html>

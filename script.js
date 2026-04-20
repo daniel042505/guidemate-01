@@ -43,6 +43,17 @@ const locationDetailModalGuidesBtn = document.getElementById("locationDetailModa
 let currentType = "locations"; 
 let selectedSpotForModal = null;
 
+function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"]+/g, function(match) {
+        return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;'
+        }[match] || match;
+    });
+}
+
 function getCurrentDataPool() {
     if (currentType === "locations") return locationData;
     return activeGuideAreaFilter ? activeGuideAreaFilter.guides : guideData;
@@ -375,6 +386,7 @@ function displayCards(items) {
         if (currentType === "locations") {
             const destinationId = parseInt(item.destinationId || item.destination_id || 0, 10);
             const isFavorited = Number.isInteger(destinationId) && destinationId > 0 && favoriteDestinationIds.has(destinationId);
+            const priceLabel = item.price ? String(item.price).trim() : '';
             // #region agent log
             fetch('http://127.0.0.1:7921/ingest/b62290be-ce23-4956-ad93-971fb215c8cf',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e8c76a'},body:JSON.stringify({sessionId:'e8c76a',runId:'pre-fix',hypothesisId:'B,C',location:'script.js:displayCards:locations',message:'rendering location card',data:{title:(title||'').slice(0,40),hasPriceField:item&&('price'in item),descPreview:(String(desc||'').slice(0,40))},timestamp:Date.now()})}).catch(()=>{});
             // #endregion
@@ -389,6 +401,7 @@ function displayCards(items) {
                         <button type="button" class="card-next-btn" aria-label="Next">→</button>
                     </div>
                     ${renderRating(rating, reviewCount)}
+                    ${priceLabel ? `<p class="card-price">Price: ${escapeHtml(priceLabel)}</p>` : ''}
                     <p class="card-desc">${desc}</p>
                 </div>
             `;

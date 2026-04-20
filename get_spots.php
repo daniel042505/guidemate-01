@@ -11,6 +11,8 @@ $col = $mysqli->query("SHOW COLUMNS FROM destinations LIKE 'image'");
 $hasImage = $col && $col->num_rows > 0;
 $col2 = $mysqli->query("SHOW COLUMNS FROM destinations LIKE 'rating'");
 $hasRating = $col2 && $col2->num_rows > 0;
+$colPrice = $mysqli->query("SHOW COLUMNS FROM destinations LIKE 'price'");
+$hasPrice = $colPrice && $colPrice->num_rows > 0;
 $colAddress = $mysqli->query("SHOW COLUMNS FROM destinations LIKE 'address'");
 $hasAddress = $colAddress && $colAddress->num_rows > 0;
 $col3 = $mysqli->query("SHOW COLUMNS FROM destinations LIKE 'latitude'");
@@ -66,7 +68,12 @@ if ($reviewResult) {
 $select = "destination_id, name, description";
 if ($hasAddress) $select .= ", address";
 if ($hasImage) $select .= ", image";
-if ($hasRating) $select .= ", rating, review_count, price";
+if ($hasRating) {
+    $select .= ", rating, review_count";
+}
+if ($hasPrice) {
+    $select .= ", price";
+}
 if ($hasLatitude && $hasLongitude) $select .= ", latitude, longitude";
 if ($hasFacilities) $select .= ", facilities_services";
 if ($hasContact) $select .= ", contact_information";

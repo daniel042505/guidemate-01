@@ -101,6 +101,65 @@
             padding: 20px;
             z-index: 1000;
         }
+        .suspension-modal[hidden] {
+            display: none;
+        }
+        .suspension-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(9, 21, 38, 0.72);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 1100;
+        }
+        .suspension-modal-card {
+            width: min(560px, 100%);
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 24px 80px rgba(15, 23, 42, 0.22);
+            overflow: hidden;
+        }
+        .suspension-modal-header {
+            padding: 24px 24px 20px;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .suspension-modal-header h3 {
+            margin: 0;
+            font-size: 1.35rem;
+            color: #0f172a;
+        }
+        .suspension-modal-header p {
+            margin: 6px 0 0;
+            color: #475569;
+            line-height: 1.6;
+        }
+        .suspension-modal-body {
+            padding: 20px 24px 24px;
+            color: #334155;
+            font-size: 0.96rem;
+            line-height: 1.7;
+        }
+        .suspension-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 0 24px 24px;
+        }
+        .suspension-modal-close-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 22px;
+            font-weight: 700;
+            cursor: pointer;
+            background: #0f172a;
+            color: #ffffff;
+        }
         .message-modal-card {
             width: min(680px, 100%);
             max-height: 88vh;
@@ -378,10 +437,30 @@
                 <h3 style="margin: 0 0 10px 0;">SOS / Support</h3>
                 <p>Direct priority line to Tourism Admin for Badian district.</p>
                 <button id="guideEmergencyCallBtn" class="btn btn-danger" style="width: 100%;">INITIATE EMERGENCY CALL</button>
+                <button id="openAdminSupportBtn" class="btn btn-outline" style="width: 100%; margin-top: 12px;">Message Admin</button>
             </div>
         </div>
     </section>
 </main>
+
+<div class="suspension-modal" id="guideSuspensionModal" hidden>
+    <div class="suspension-modal-card" role="alertdialog" aria-modal="true" aria-labelledby="guideSuspensionModalTitle">
+        <div class="suspension-modal-header">
+            <div>
+                <h3 id="guideSuspensionModalTitle">Account Suspended</h3>
+                <p id="guideSuspensionModalSubtitle">Your tour guide account is currently suspended.</p>
+            </div>
+            <button type="button" class="message-close-btn" id="guideSuspensionModalClose" aria-label="Close suspension notice">×</button>
+        </div>
+        <div class="suspension-modal-body">
+            <p id="guideSuspensionModalMessage">Your account is suspended until the date shown below. You cannot accept new bookings while your account remains suspended.</p>
+            <p id="guideSuspensionModalUntil" style="margin-top: 14px; font-weight: 700; color: #0f172a;"></p>
+        </div>
+        <div class="suspension-modal-actions">
+            <button type="button" class="suspension-modal-close-btn" id="guideSuspensionModalButton">Okay</button>
+        </div>
+    </div>
+</div>
 
 <div class="message-modal" id="guideMessageModal" hidden>
     <div class="message-modal-card" role="dialog" aria-modal="true" aria-labelledby="guideMessageModalTitle">
@@ -443,9 +522,6 @@
         window.addEventListener('click', function() { menu.classList.remove('show'); });
     }
 })();
-</script>
-</body>
-</html>
 </script>
 </body>
 </html>

@@ -1,0 +1,79 @@
+.contacts-hero {
+    padding: 64px 24px 36px;
+    text-align: center;
+}
+
+.contacts-hero h1 {
+    margin-bottom: 12px;
+    font-size: 2.4rem;
+}
+
+.contacts-hero p {
+    margin: 0 auto;
+    max-width: 760px;
+    color: #555;
+}
+
+.contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+    margin: 24px auto 48px;
+    max-width: 1120px;
+    padding: 0 20px;
+}
+
+.contact-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 20px 45px rgba(21, 38, 73, 0.06);
+    padding: 24px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact-card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.contact-card p {
+    margin: 0;
+    color: #333;
+    line-height: 1.6;
+}
+
+.contact-card .contact-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.contact-card .contact-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    color: #1a1a1a;
+}
+
+.contact-card .contact-meta span::before {
+    content: '•';
+    color: #2f9e44;
+}
+
+.contact-note {
+    margin: 24px auto 0;
+    max-width: 760px;
+    color: #555;
+    text-align: center;
+    font-size: 0.98rem;
+}
+
+
+.profile-container {
+    display: none;
+}

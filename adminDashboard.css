@@ -78,6 +78,34 @@
             text-decoration: none;
             display: inline-block;
         }
+
+        .dashboard-map-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-map-label {
+            font-size: 0.95rem;
+            color: #edf2f7;
+            min-width: 140px;
+        }
+
+        .dashboard-location-select {
+            min-width: 240px;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: #000;
+            outline: none;
+        }
+
+        .dashboard-location-select.placeholder-color {
+            color: #fff;
+        }
         .logout-link:hover {
             background: #008855 !important;
         }

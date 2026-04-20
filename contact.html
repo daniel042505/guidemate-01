@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuideMate Contacts</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="contact.css">
+</head>
+<body>
+<header class="navbar">
+    <div class="logo">GuideMate 🌴</div>
+    <nav>
+        <a href="landingpage.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="browse.html">Browse</a>
+        <a href="mytrips.html">My Trips</a>
+    </nav>
+    <div class="nav-right">
+        <a href="signinTouristAdmin.html" id="loginLink">
+            <button class="login-btn" id="loginBtn">Login</button>
+        </a>
+        <div class="profile-container" id="profileContainer">
+            <img src="photos/vince.jfif" alt="Profile" class="profile-pic" id="profilePic">
+            <div class="dropdown-menu" id="dropdownMenu">
+                <div class="menu-arrow"></div>
+                <a href="profiletourist.html">Profile</a>
+                <a href="navigation.html">Navigation</a>
+                <a href="mytrips.html">Messages</a>
+                <hr>
+                <button type="button" class="sign-out-link" id="contactLogoutBtn">Sign out</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="contacts-hero">
+    <h1>GuideMate Contact Directory</h1>
+    <p>Find all available GuideMate guide contacts in one place. Use this page to reach out by email or phone, or open support if you need help.</p>
+</section>
+
+<section class="contacts-grid" id="contactsGrid">
+    <div class="contact-card">
+        <h3>Loading contacts…</h3>
+        <p>Please wait while we load the latest contact list.</p>
+    </div>
+</section>
+
+<div class="contact-note">
+    <p>If you need immediate help, open the admin support chat from your Dashboard once signed in.</p>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-main">
+        <div class="footer-col footer-about">
+            <h3 class="footer-logo">GuideMate</h3>
+            <p>“New to Cebu City? GuideMate is here to guide you every step of the way.”</p>
+            <div class="footer-social">
+                
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="landingpage.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+            <h4>Contact Us</h4>
+            <p class="footer-contact-item">📍 Cebu City, Philippines</p>
+            <p class="footer-contact-item">✉️ support@guidemate.ph</p>
+        </div>
+    </div>
+    <div class="footer-copy">
+        <p>Copyright © 2026 | Developed by SCC Students - All Rights Reserved</p>
+    </div>
+</footer>
+
+<script src="logout_modal.js"></script>
+<script src="script.js"></script>
+<script src="contact.js"></script>
+</body>
+</html>

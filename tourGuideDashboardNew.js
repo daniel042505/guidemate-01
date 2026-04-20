@@ -164,10 +164,27 @@ feather.replace();
         els.thread.innerHTML = messages.map(function(message) {
             var senderRole = message.sender_role === 'guide' ? 'guide' : 'tourist';
             var senderLabel = senderRole === 'guide' ? 'You' : (touristName || 'Tourist');
+            var messageContent = '<strong>' + escapeHtml(senderLabel) + '</strong>';
+            
+            if (message.message_text) {
+                messageContent += '<p>' + escapeHtml(message.message_text) + '</p>';
+            }
+            
+            if (message.meet_time || message.meeting_location) {
+                messageContent += '<div style="background-color: rgba(0,0,0,0.05); padding: 8px; border-radius: 4px; margin: 8px 0; font-size: 0.9em;">';
+                if (message.meet_time) {
+                    messageContent += '<div>📅 <strong>Confirm date/time:</strong> ' + escapeHtml(formatMessageDateTime(message.meet_time)) + '</div>';
+                }
+                if (message.meeting_location) {
+                    messageContent += '<div>📍 <strong>Location:</strong> ' + escapeHtml(message.meeting_location) + '</div>';
+                }
+                messageContent += '</div>';
+            }
+            
+            messageContent += '<small>' + escapeHtml(formatMessageDateTime(message.created_at)) + '</small>';
+            
             return '<div class="message-bubble ' + senderRole + '">' +
-                '<strong>' + escapeHtml(senderLabel) + '</strong>' +
-                '<p>' + escapeHtml(message.message_text || '') + '</p>' +
-                '<small>' + escapeHtml(formatMessageDateTime(message.created_at)) + '</small>' +
+                messageContent +
                 '</div>';
         }).join('');
         els.thread.scrollTop = els.thread.scrollHeight;
@@ -421,11 +438,32 @@ feather.replace();
                 if (specEl && data.specialization !== undefined) specEl.value = data.specialization || '';
                 applyGuideDisplayName(guideDisplayName);
                 setDashboardStats(data.avg_rating, data.review_count);
+                if (data.is_suspended) {
+                    showGuideSuspensionModal(data.suspended_until);
+                }
             })
             .catch(function() {});
     }
 
-    function loadTouristReviews() {
+    function showGuideSuspensionModal(suspendedUntil) {
+    var modal = document.getElementById('guideSuspensionModal');
+    var untilEl = document.getElementById('guideSuspensionModalUntil');
+    var messageEl = document.getElementById('guideSuspensionModalMessage');
+    if (!modal || !untilEl) return;
+    untilEl.textContent = suspendedUntil ? ('Suspension ends on ' + suspendedUntil) : 'Suspension active until further notice.';
+    if (messageEl) {
+        messageEl.textContent = 'Your account is suspended until the date shown above. You will not be able to accept new bookings until this suspension expires.';
+    }
+    modal.hidden = false;
+}
+
+function closeGuideSuspensionModal() {
+    var modal = document.getElementById('guideSuspensionModal');
+    if (!modal) return;
+    modal.hidden = true;
+}
+
+function loadTouristReviews() {
         var container = document.getElementById('recentFeedbackList');
         if (!container) return;
         fetch('get_guide_reviews.php', { credentials: 'same-origin' })
@@ -788,6 +826,12 @@ function loadApprovedBooking() {
         if (emergencyCallBtn) emergencyCallBtn.addEventListener('click', initiateEmergencyCall);
         if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeGuideMessageModal);
         if (sendMessageBtn) sendMessageBtn.addEventListener('click', sendGuideMessage);
+        var adminSupportBtn = document.getElementById('openAdminSupportBtn');
+        if (adminSupportBtn) {
+            adminSupportBtn.addEventListener('click', function() {
+                window.location.href = 'adminSupport.html';
+            });
+        }
         if (modal) {
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
@@ -795,9 +839,14 @@ function loadApprovedBooking() {
                 }
             });
         }
+        var suspensionClose = document.getElementById('guideSuspensionModalClose');
+        var suspensionButton = document.getElementById('guideSuspensionModalButton');
+        if (suspensionClose) suspensionClose.addEventListener('click', closeGuideSuspensionModal);
+        if (suspensionButton) suspensionButton.addEventListener('click', closeGuideSuspensionModal);
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeGuideMessageModal();
+                closeGuideSuspensionModal();
             }
         });
     });

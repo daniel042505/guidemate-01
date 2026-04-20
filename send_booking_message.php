@@ -154,8 +154,10 @@ $insertStmt = $mysqli->prepare("INSERT INTO booking_messages (
         tourist_user_id,
         sender_role,
         sender_user_id,
-        message_text
-    ) VALUES (?, ?, ?, ?, ?, ?)");
+        message_text,
+        meet_time,
+        meeting_location
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
 if (!$insertStmt) {
     http_response_code(500);
@@ -164,7 +166,9 @@ if (!$insertStmt) {
 }
 
 $touristUserId = (int) $booking['tourist_user_id'];
-$insertStmt->bind_param('iiisis', $bookingId, $guideId, $touristUserId, $role, $senderUserId, $messageText);
+$meetTimeDb = ($meetTime !== '') ? normalize_booking_meet_time($meetTime) : null;
+$meetingLocationDb = ($meetingLocation !== '') ? normalize_booking_location($meetingLocation) : null;
+$insertStmt->bind_param('iiisisss', $bookingId, $guideId, $touristUserId, $role, $senderUserId, $messageText, $meetTimeDb, $meetingLocationDb);
 $ok = $insertStmt->execute();
 $messageId = $ok ? (int) $insertStmt->insert_id : 0;
 $insertStmt->close();
@@ -185,6 +189,8 @@ echo json_encode([
         'sender_role' => $role,
         'sender_user_id' => $senderUserId,
         'message_text' => $messageText,
+        'meet_time' => $meetTimeDb,
+        'meeting_location' => $meetingLocationDb,
         'created_at' => date('Y-m-d H:i:s')
     ]
 ]);

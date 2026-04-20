@@ -95,6 +95,8 @@ $msgStmt = $mysqli->prepare("SELECT
         sender_role,
         sender_user_id,
         message_text,
+        meet_time,
+        meeting_location,
         created_at
     FROM booking_messages
     WHERE booking_id = ?
@@ -112,6 +114,8 @@ if ($msgStmt) {
                 'sender_role' => (string) ($row['sender_role'] ?? 'guide'),
                 'sender_user_id' => (int) ($row['sender_user_id'] ?? 0),
                 'message_text' => (string) ($row['message_text'] ?? ''),
+                'meet_time' => $row['meet_time'] ?? null,
+                'meeting_location' => $row['meeting_location'] ?? null,
                 'created_at' => $row['created_at'] ?? ''
             ];
         }

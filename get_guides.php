@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'dbconnect.php';
 require_once 'guide_booking_helpers.php';
 
@@ -21,6 +22,7 @@ if ($hasStatus) {
 $result = $mysqli->query($query);
 
 $bookedGuideIds = [];
+$pendingGuideIds = [];
 if (ensure_guide_bookings_table($mysqli)) {
     $bookedResult = $mysqli->query("SELECT guide_id FROM guide_bookings WHERE status = 'Approved'");
     if ($bookedResult) {
@@ -29,6 +31,25 @@ if (ensure_guide_bookings_table($mysqli)) {
             if ($bookedGuideId > 0) {
                 $bookedGuideIds[$bookedGuideId] = true;
             }
+        }
+    }
+
+    if (!empty($_SESSION['role']) && $_SESSION['role'] === 'tourist' && !empty($_SESSION['user_id'])) {
+        $touristUserId = (int) $_SESSION['user_id'];
+        $pendingStmt = $mysqli->prepare("SELECT guide_id FROM guide_bookings WHERE tourist_user_id = ? AND status IN ('Pending', 'Approved')");
+        if ($pendingStmt) {
+            $pendingStmt->bind_param('i', $touristUserId);
+            $pendingStmt->execute();
+            $pendingResult = $pendingStmt->get_result();
+            if ($pendingResult) {
+                while ($pendingRow = $pendingResult->fetch_assoc()) {
+                    $pendingGuideId = (int) ($pendingRow['guide_id'] ?? 0);
+                    if ($pendingGuideId > 0) {
+                        $pendingGuideIds[$pendingGuideId] = true;
+                    }
+                }
+            }
+            $pendingStmt->close();
         }
     }
 }
@@ -73,7 +94,7 @@ if ($result) {
             'image' => !empty($row['profile_image']) ? $row['profile_image'] : 'photos/default.jpg',
             'rating' => (float)$guideRatings['avg_rating'],
             'review_count' => (int)$guideRatings['review_count'],
-            'is_booked' => !empty($bookedGuideIds[$guideId])
+            'is_booked' => !empty($bookedGuideIds[$guideId]) || !empty($pendingGuideIds[$guideId])
         ];
     }
 }

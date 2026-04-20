@@ -27,6 +27,7 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             <a href="#real-time-map" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link active">REAL-TIME MAP</a>
             <a href="#fleet-status" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link">FLEET STATUS</a>
             <a href="#revenue" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link">REVENUE</a>
+            <a href="adminSupport.html" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link">ADMIN SUPPORT</a>
             <a href="add_admin.php" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link">ADD ADMIN</a>
             <a href="add_spot.php" style="color:inherit;text-decoration:none;font-size:0.9rem;" class="nav-link">ADD SPOT</a>
             <a href="logout.php" class="logout-link">LOGOUT</a>
@@ -44,6 +45,12 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             <div class="panel-head">
                 <h3>Real-time Map</h3>
                 <span class="pending-subtitle">Live tour and destination view for your admin dashboard.</span>
+            </div>
+            <div class="dashboard-map-controls">
+                <label for="dashboardLocationSelect" class="dashboard-map-label">Choose destination:</label>
+                <select id="dashboardLocationSelect" class="dashboard-location-select placeholder-color">
+                    <option value="" selected>Select a destination</option>
+                </select>
             </div>
             <div id="dashboardMap" class="dashboard-map"></div>
         </div>
@@ -628,7 +635,7 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
     <script src="logout_modal.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>feather.replace();</script>
+    <script src="adminDashboard.js"></script>
     <script>
     (function() {
         var logoutLink = document.querySelector('a.logout-link');
@@ -2068,10 +2075,80 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
                 });
         }
 
+        var adminDashboardMap = null;
+        var adminDashboardMarkers = [];
+        var adminDashboardSelectedMarker = null;
+        var adminDashboardSpots = [];
+
+        function loadDashboardSpots() {
+            var select = document.getElementById('dashboardLocationSelect');
+            if (!select || !adminDashboardMap) return;
+            select.innerHTML = '<option value="">Select a destination</option>';
+            fetchWithTimeout('get_spots_admin.php', { credentials: 'same-origin' })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    adminDashboardSpots = Array.isArray(data) ? data : [];
+                    adminDashboardMarkers.forEach(function(marker) {
+                        if (marker && adminDashboardMap) {
+                            adminDashboardMap.removeLayer(marker);
+                        }
+                    });
+                    adminDashboardMarkers = [];
+                    adminDashboardSelectedMarker = null;
+
+                    adminDashboardSpots.forEach(function(spot) {
+                        if (spot.latitude == null || spot.longitude == null) {
+                            return;
+                        }
+                        var option = document.createElement('option');
+                        option.value = String(spot.destination_id);
+                        option.textContent = spot.name || 'Unnamed destination';
+                        select.appendChild(option);
+
+                        var marker = L.marker([spot.latitude, spot.longitude]).addTo(adminDashboardMap)
+                            .bindPopup('<strong>' + (spot.name || '') + '</strong>');
+                        adminDashboardMarkers.push(marker);
+                    });
+
+                    select.addEventListener('change', function() {
+                        if (!adminDashboardMap) return;
+                        var destinationId = select.value;
+                        if (!destinationId) {
+                            adminDashboardMap.setView([10.3157, 123.8854], 11);
+                            if (adminDashboardSelectedMarker) {
+                                adminDashboardMap.removeLayer(adminDashboardSelectedMarker);
+                                adminDashboardSelectedMarker = null;
+                            }
+                            return;
+                        }
+
+                        var spot = adminDashboardSpots.find(function(item) {
+                            return String(item.destination_id) === destinationId;
+                        });
+                        if (!spot || spot.latitude == null || spot.longitude == null) {
+                            return;
+                        }
+                        adminDashboardMap.setView([spot.latitude, spot.longitude], 14);
+                        if (adminDashboardSelectedMarker) {
+                            adminDashboardMap.removeLayer(adminDashboardSelectedMarker);
+                        }
+                        adminDashboardSelectedMarker = L.marker([spot.latitude, spot.longitude], {
+                            opacity: 0.9
+                        }).addTo(adminDashboardMap);
+                        adminDashboardSelectedMarker.bindPopup('<strong>' + (spot.name || '') + '</strong>').openPopup();
+                    });
+                })
+                .catch(function() {
+                    // ignore load failures for now
+                });
+        }
+
         function initDashboardMap() {
             var mapEl = document.getElementById('dashboardMap');
             if (!mapEl || typeof L === 'undefined') return;
-            var map = L.map(mapEl, {
+            adminDashboardMap = L.map(mapEl, {
                 zoomControl: true,
                 attributionControl: false
             }).setView([10.3157, 123.8854], 11);
@@ -2079,10 +2156,12 @@ if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
+            }).addTo(adminDashboardMap);
 
-            L.marker([10.3157, 123.8854]).addTo(map)
+            L.marker([10.3157, 123.8854]).addTo(adminDashboardMap)
                 .bindPopup('GuideMate Admin map view – Cebu, Philippines.');
+
+            loadDashboardSpots();
         }
 
         function getSecurityBadgeClass(status) {

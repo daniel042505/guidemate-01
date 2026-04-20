@@ -93,6 +93,36 @@ function ensure_booking_messages_table(mysqli $mysqli)
         $mysqli->query("ALTER TABLE booking_messages ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER message_text");
     }
 
+    if (!guide_bookings_column_exists($mysqli, 'booking_messages', 'meet_time')) {
+        $mysqli->query("ALTER TABLE booking_messages ADD COLUMN meet_time DATETIME NULL DEFAULT NULL AFTER created_at");
+    }
+
+    if (!guide_bookings_column_exists($mysqli, 'booking_messages', 'meeting_location')) {
+        $mysqli->query("ALTER TABLE booking_messages ADD COLUMN meeting_location VARCHAR(255) NULL DEFAULT NULL AFTER meet_time");
+    }
+
+    return !$mysqli->error;
+}
+
+function ensure_admin_messages_table(mysqli $mysqli)
+{
+    $sql = "CREATE TABLE IF NOT EXISTS admin_messages (
+        message_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        sender_role VARCHAR(20) NOT NULL,
+        sender_user_id INT UNSIGNED NOT NULL,
+        recipient_role VARCHAR(20) NOT NULL,
+        recipient_user_id INT UNSIGNED NOT NULL,
+        message_text TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_admin_messages_sender (sender_role, sender_user_id),
+        INDEX idx_admin_messages_recipient (recipient_role, recipient_user_id),
+        INDEX idx_admin_messages_created_at (created_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+
+    if (!$mysqli->query($sql)) {
+        return false;
+    }
+
     return !$mysqli->error;
 }
 
